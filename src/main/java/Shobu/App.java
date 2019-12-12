@@ -3,11 +3,59 @@
  */
 package Shobu;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Scanner;
+import java.lang.ProcessBuilder;
+import java.lang.Process;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
+
+    private static String getStdin() {
+        Scanner in = new Scanner(System.in);
+        String s = in.next();
+        return s;
     }
+
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        String inputString = "lol"; //getStdin();
+
+        ProcessBuilder pb = new ProcessBuilder("cat");
+        Process p;
+        try {
+            p = pb.start();
+        } catch (Exception e) {
+            System.out.println("Couldn't start subprocess.");
+            return;
+        }
+        if (p == null) {
+            return;
+        }
+        OutputStream subprocessInput = p.getOutputStream();
+        InputStream subprocessOutput = p.getInputStream();
+        int bytesActuallyRead = 0;
+        while (bytesActuallyRead < 30) {
+            try {
+                subprocessInput.write(inputString.getBytes());
+                subprocessInput.flush();
+            } catch (Exception e) {
+                System.out.println("Error writing to subprocess stdin.");
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            byte b[] = new byte[2];
+            try {
+                while (subprocessOutput.available() > 0) {
+                    subprocessOutput.read(b, 1, 1);
+                    bytesActuallyRead += 1;
+                    break;
+                }
+                sb.append(new String(b));
+            } catch (Exception e) {
+                System.out.println("Error reading subprocess stdout");
+                return;
+            }
+            System.out.print(sb.toString());
+        }
     }
 }
