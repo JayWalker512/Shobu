@@ -1,12 +1,17 @@
 package Shobu;
 
 public class Vector2 {
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
 
     Vector2(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    Vector2(Vector2 v) {
+        this.x = v.x;
+        this.y = v.y;
     }
 
     public boolean equals(Vector2 a) {

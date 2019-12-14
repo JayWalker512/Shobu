@@ -2,12 +2,24 @@ package Shobu;
 
 public class Game {
     private Stone.COLOR whosTurnIsIt;
+    private int turnNumber;
 
-    Game() {
-        whosTurnIsIt = Stone.COLOR.BLACK;
+    Game(GameRules rules, Board board) {
+        this.whosTurnIsIt = Stone.COLOR.BLACK;
+        this.turnNumber = 0;
+
+    }
+
+    public Stone.COLOR getWhosTurnItIs() {
+        return whosTurnIsIt;
+    }
+
+    public int getTurnNumber() {
+        return turnNumber;
     }
 
     public void tick() {
+        // TODO transition the board here
         swapWhosTurnItIs();
     }
 
