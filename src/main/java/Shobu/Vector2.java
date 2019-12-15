@@ -21,6 +21,10 @@ public class Vector2 {
         return false;
     }
 
+    public String toString() {
+        return "(" + Integer.toString(x) + "," + Integer.toString(y) + ")";
+    }
+
     public Vector2 add(Vector2 a) {
         return new Vector2(this.x + a.x, this.y + a.y);
     }

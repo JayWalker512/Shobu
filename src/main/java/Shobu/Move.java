@@ -7,13 +7,33 @@ import java.util.List;
 
 
 public class Move {
-    private Vector2 from;
-    private Vector2 to;
+    private Vector2 origin;
+    private Vector2 heading;
+    private List<String> errors;
 
-    public Move(Vector2 from, Vector2 to) {
-        this.from = from;
-        this.to = to;
+    public Vector2 getOrigin() {
+        return new Vector2(origin);
     }
+
+    public void setOrigin(Vector2 origin) {
+        this.origin = new Vector2(origin);
+    }
+
+    public Vector2 getHeading() {
+        return new Vector2(heading);
+    }
+
+    public void setHeading(Vector2 heading) {
+        this.heading = new Vector2(heading);
+    }
+
+    public Move(Vector2 origin, Vector2 heading) {
+        this.origin = origin;
+        this.heading = heading;
+        this.errors = new ArrayList<>();
+    }
+
+    // TODO FIXME this doesn't really make sense. Need origin, heading not from, to.
 
     // This method does not consider other stones in the way. Only spacing.
     public boolean isValid() {
@@ -23,11 +43,6 @@ public class Move {
         //XXoXX
         //_XXX_
         //X_X_X
-
-        // must match, (x,y),(x,y)
-        if (from.x != to.x || from.y != to.y) {
-            return false;
-        }
 
         List<Vector2> invalidMoves = new ArrayList<>();
         invalidMoves.add(new Vector2(-1,-2));
@@ -45,15 +60,23 @@ public class Move {
         invalidMoves.add(new Vector2(1,2));
 
         for (Vector2 invalid : invalidMoves) {
-            if (from.equals(invalid) == true) {
+            if (heading.equals(invalid) == true) {
                 return false;
             }
         }
 
-        if (from.x > 2 || to.x > 2 || from.y > 2 || to.y > 2) {
+        if (heading.x > 2 || heading.y > 2) {
             return false;
         }
 
         return true;
+    }
+
+    public void addError(String e) {
+        this.errors.add(e);
+    }
+
+    public List<String> getErrors() {
+        return new ArrayList<>(this.errors);
     }
 }

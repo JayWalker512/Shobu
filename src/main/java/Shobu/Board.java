@@ -17,6 +17,11 @@ public class Board {
         }
     }
 
+    public Board(Board b) {
+        this.dimensions = b.getDimensions();
+        this.stones = b.getStones();
+    }
+
     public Board() {
         this.stones = new ArrayList<Stone>();
         this.dimensions = new Vector2(8,8); // call the other constructor
@@ -32,6 +37,10 @@ public class Board {
             this.setStone(new Vector2(x, 3), sf.createStone(Stone.COLOR.BLACK));
             this.setStone(new Vector2(x, 7), sf.createStone(Stone.COLOR.BLACK));
         }
+    }
+
+    public Vector2 getDimensions() {
+        return new Vector2(dimensions);
     }
 
     public boolean setStone(Vector2 location, Stone stone) {
@@ -56,7 +65,18 @@ public class Board {
     }
 
     public Stone getStone(Vector2 location) {
-        return this.stones.get(location.x + (location.y * this.dimensions.x));
+        if (this.stones.get(location.x + (location.y * this.dimensions.x)) != null) {
+            return new Stone(this.stones.get(location.x + (location.y * this.dimensions.x)));
+        }
+        return null;
+    }
+
+    public List<Stone> getStones() {
+        List<Stone> stonesList = new ArrayList<>();
+        for (Stone s : this.stones) {
+            stonesList.add(s);
+        }
+        return stonesList;
     }
 
     public String toString() {

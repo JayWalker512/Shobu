@@ -43,6 +43,7 @@ public class Stone {
         this.color = color;
     }
 
+    // Copy constructor
     Stone(Stone s) {
         this(s.getId(), s.getColor());
     }
