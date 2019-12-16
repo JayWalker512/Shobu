@@ -47,4 +47,8 @@ public class Stone {
     Stone(Stone s) {
         this(s.getId(), s.getColor());
     }
+
+    public String toString() {
+        return "(" + Integer.toString(this.id) + ", " + (this.color == COLOR.WHITE ? "WHITE" : "BLACK") + ")";
+    }
 }

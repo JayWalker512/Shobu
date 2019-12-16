@@ -23,6 +23,8 @@ public class Board {
     }
 
     public Board() {
+        // TODO FIXME maybe I want the option of initializing a board with no stones for tests?
+
         this.stones = new ArrayList<Stone>();
         this.dimensions = new Vector2(8,8); // call the other constructor
         for (int i = 0; i < 8 * 8; i++) {
@@ -65,18 +67,50 @@ public class Board {
     }
 
     public Stone getStone(Vector2 location) {
-        if (this.stones.get(location.x + (location.y * this.dimensions.x)) != null) {
-            return new Stone(this.stones.get(location.x + (location.y * this.dimensions.x)));
+        // bounds check
+        int index = location.x + (location.y * this.dimensions.x);
+        if (index >= this.getDimensions().x * this.getDimensions().y || index < 0) {
+            return null;
+        }
+
+        if (this.stones.get(index) != null) {
+            return new Stone(this.stones.get(index));
         }
         return null;
     }
 
     public List<Stone> getStones() {
+        //System.out.println("called getStones()");
         List<Stone> stonesList = new ArrayList<>();
         for (Stone s : this.stones) {
-            stonesList.add(s);
+            if (s != null) {
+                //System.out.println(s.toString());
+                stonesList.add(new Stone(s));
+            } else {
+                //System.out.println("Added a null element.");
+                stonesList.add(s); // null
+            }
+
         }
         return stonesList;
+    }
+
+    // TODO FIXME should this return a new board rather than modifying in place?
+    public void moveStone(Vector2 from, Vector2 to) {
+        Stone stoneToMove = this.getStone(from);
+        if (stoneToMove == null) { return; }
+
+        // check if the stone is being moved across board boundaries. If so, delete it.
+        if (from.x > 3 && to.x <= 3 || from.x <= 3 && to.x > 3) {
+            this.setStone(from, null);
+            return;
+        }
+        if (from.y > 3 && to.y <= 3 || from.y <= 3 && to.y > 3) {
+            this.setStone(from, null);
+            return;
+        }
+
+        this.setStone(to, stoneToMove);
     }
 
     public String toString() {

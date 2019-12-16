@@ -4,7 +4,7 @@ public class Game {
     private Stone.COLOR whosTurnIsIt;
     private int turnNumber;
 
-    private GameRules rules;
+    private GameRules rules; // Remind me why I need this?
     private Board board;
 
     public GameRules getRules() {
@@ -38,10 +38,23 @@ public class Game {
         return turnNumber;
     }
 
-    public void takeTurn(Turn turn) {
-        // TODO transition the board here
+    public boolean takeTurn(Turn turn) {
+        // TODO FIXME should I return the error string here to denote success/failure?
+
+        Turn validatedTurn = GameRules.validateTurn(this, this.getBoard(), turn);
+        if (validatedTurn.getErrors().size() != 0) {
+            for (String e : validatedTurn.getErrors()) {
+                System.out.println(e);
+            }
+            return false;
+        }
+
+        this.setBoard(GameRules.transitionBoard(this.getBoard(), turn));
+
         swapWhosTurnItIs();
         this.turnNumber++;
+
+        return true;
     }
 
     void swapWhosTurnItIs() {

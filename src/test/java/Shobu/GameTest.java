@@ -25,10 +25,10 @@ public class GameTest {
         assertEquals(0, game.getTurnNumber());
         game.takeTurn(new Turn(
                 new Move(
-                        new Vector2(0,0), new Vector2(0,0)
+                        new Vector2(0,7), new Vector2(0,-1)
                 ),
                 new Move(
-                        new Vector2(0,0), new Vector2(0,0)
+                        new Vector2(0,3), new Vector2(0,-1)
                 )));
         assertEquals(1, game.getTurnNumber());
     }
@@ -56,7 +56,7 @@ public class GameTest {
                 new Move(
                         new Vector2(4, 3), new Vector2(0, -2)
                 ));
-        game.takeTurn(blacksTurn);
+        assertTrue(game.takeTurn(blacksTurn));
         Turn whitesTurn = new Turn(
                 new Move(
                         new Vector2(1, 0), new Vector2(-1, -1)
@@ -64,7 +64,7 @@ public class GameTest {
                 new Move(
                         new Vector2(5, 0), new Vector2(-1, -1)
                 ));
-        game.takeTurn(whitesTurn);
+        assertTrue(game.takeTurn(whitesTurn));
 
         // Now check that the black stone we pushed off is no longer on the board
         assertEquals(15, countStonesOfColorOnBoard(game.getBoard(), Stone.COLOR.BLACK));
