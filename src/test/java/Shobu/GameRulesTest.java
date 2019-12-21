@@ -1,5 +1,6 @@
 package Shobu;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -9,27 +10,36 @@ import static org.junit.Assert.*;
 public class GameRulesTest {
 
     @Test
-    public void testMoveIntersection() {
+    @Ignore
+    public void testTransitionBoard() {
 
-        // set up a mock board
-        Board b = new Board();
-        b.setStone(new Vector2(0,0), new Stone(0, Stone.COLOR.WHITE));
-        b.setStone(new Vector2(1,1), new Stone(1, Stone.COLOR.WHITE));
-        b.setStone(new Vector2(2,2), new Stone(2, Stone.COLOR.BLACK));
+        // Test scenario 1
+        Board b = new Board(false);
+        StoneFactory sf = StoneFactory.getInstance();
 
-        // movement size 1
-        Move m = new Move(new Vector2(2,2), new Vector2(-1, -1));
-        List<Stone> intersected = GameRules.getStonesIntersected(b, m);
-        assertEquals(1, intersected.size());
+        // Test x pushes o from board.
+        // o...|....
+        // .x..|....
+        // ....|....
+        // ....|....
+        // ---------
+        // ....|....
+        // ....|....
+        // ....|....
+        // ....|....
 
-        // movement size 2
-        m = new Move(new Vector2(2,2), new Vector2(-2, -2));
-        intersected = GameRules.getStonesIntersected(b, m);
-        assertEquals(2, intersected.size());
+        b.setStone(new Vector2(0,0), sf.createStone(Stone.COLOR.WHITE));
+        b.setStone(new Vector2(1,1), sf.createStone(Stone.COLOR.BLACK));
 
-        for (Stone s : intersected) {
-            assertEquals(Stone.COLOR.WHITE, s.getColor());
-        }
+        Turn t = new Turn(
+                new Move(new Vector2(1,1), new Vector2(0,0)), //passive
+                new Move(new Vector2(1,1), new Vector2(-1,-1)) //aggressive
+        );
+
+        // Move stone(s) and ensure the black one is the only one that remains in place of the white.
+        b = GameRules.transitionBoard(b, t);
+        assertEquals(Stone.COLOR.BLACK, b.getStone(new Vector2(0,0)));
+        assertEquals(1, b.getStones().size());
     }
 
 }

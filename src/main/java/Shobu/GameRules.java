@@ -1,6 +1,5 @@
 package Shobu;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameRules {
@@ -13,33 +12,11 @@ public class GameRules {
 
     }
 
-    public static List<Stone> getStonesIntersected(Board board, Move move) {
-        int xAdjust = (move.getHeading().x >= 0 ? -1 : 1);
-        int yAdjust = (move.getHeading().y >= 0 ? -1 : 1);
-        List<Stone> stones = new ArrayList<>();
-        Vector2 currentHeading = move.getHeading();
-        while (currentHeading.x != 0 || currentHeading.y != 0) {
-            Stone s = board.getStone(move.getOrigin().add(move.getHeading()));
-            if (s != null) { stones.add(s); }
-            if (currentHeading.x != 0) {
-                currentHeading = new Vector2(currentHeading.x + xAdjust, currentHeading.y);
-            }
-            if (currentHeading.y != 0) {
-                currentHeading = new Vector2(currentHeading.x, currentHeading.y + yAdjust);
-            }
-        }
-        return stones;
-    }
-
-    private static int clamp(int v, int min, int max) {
-        return Math.max(min, Math.min(max, v));
-    }
-
     public static Board transitionBoard(Board board, Turn turn) {
         Board newBoard = new Board(board);
 
         // Logic for moving a stone from the aggressive move. Assumes the move has been validated.
-        Vector2 step = new Vector2(clamp(turn.getAggressive().getHeading().x, -1, 1), clamp(turn.getAggressive().getHeading().y, -1 ,1));
+        Vector2 step = new Vector2(Utilities.clamp(turn.getAggressive().getHeading().x, -1, 1), Utilities.clamp(turn.getAggressive().getHeading().y, -1 ,1));
         // calculate first stones new position
         // if on top, move other stone same direction
         // if not done, repeat
@@ -81,11 +58,11 @@ public class GameRules {
         }
 
         // Can't push through 2+ stones
-        List<Stone> intersectedStones = getStonesIntersected(board, turn.getPassive());
+        List<Stone> intersectedStones = Utilities.getStonesIntersected(board, turn.getPassive());
         if (intersectedStones.size() != 0) {
             validatedTurn.addError("Attempts to push " + Integer.toString(intersectedStones.size()) + " stone(s) with a passive move.");
         }
-        intersectedStones = getStonesIntersected(board, turn.getAggressive());
+        intersectedStones = Utilities.getStonesIntersected(board, turn.getAggressive());
         if (intersectedStones.size() >= 2) {
             validatedTurn.addError("Attempts to push more than 1 stone with aggressive move.");
         }
