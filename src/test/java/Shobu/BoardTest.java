@@ -16,6 +16,16 @@ public class BoardTest {
     }
 
     @Test
+    public void testMovingStone() {
+        // When I move a stone from one place to another, it should be present in the new location and not in the old.
+        Board b = new Board(true);
+        int expectedId = b.getStone(new Vector2(0, 0)).getId();
+        b.moveStone(new Vector2(0,0), new Vector2(0, 1));
+        assertEquals(expectedId, b.getStone(new Vector2(0, 1)).getId());
+        assertEquals(null, b.getStone(new Vector2(0,0)));
+    }
+
+    @Test
     public void testMovingAcrossBoundaries() {
         Board b = new Board(true); // This has the default game board configuration, so we move an existing stone.
         b.moveStone(new Vector2(3,3), new Vector2(4, 3));
