@@ -24,6 +24,7 @@ public class Utilities {
 
         // This is a pretty fragile algorithm begging for an infinite loop...
         while (true) {
+            if (board.getQuadrant(currentScanLocation) != board.getQuadrant(move.getOrigin())) { return stones; }
             Stone intersected = board.getStone(currentScanLocation);
             if (intersected != null) {
                 stones.add(intersected);

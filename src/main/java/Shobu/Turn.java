@@ -15,14 +15,6 @@ public class Turn {
         this.aggressive = aggressive;
     }
 
-    public void setPassive(Move passive) {
-        this.passive = passive;
-    }
-
-    public void setAggressive(Move aggressive) {
-        this.aggressive = aggressive;
-    }
-
     public Move getPassive() {
         return passive;
     }

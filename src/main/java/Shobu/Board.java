@@ -124,7 +124,6 @@ public class Board {
         this.moveStone(m.getOrigin(), m.getOrigin().add(m.getHeading()));
     }
 
-    // TODO FIXME should this return a new board rather than modifying in place?
     public void moveStone(Vector2 from, Vector2 to) {
         Stone stoneToMove = this.getStone(from);
         if (stoneToMove == null) { return; }
@@ -173,5 +172,21 @@ public class Board {
         }
 
         return representation.toString();
+    }
+
+    public int getQuadrant(Vector2 location) {
+        if (location.x < 4 && location.y < 4) {
+            return 0;
+        }
+        if (location.x >= 4 && location.y < 4) {
+            return 1;
+        }
+        if (location.x < 4 && location.y >= 4) {
+            return 2;
+        }
+        if (location.x >= 4 && location.y >= 4) {
+            return 3;
+        }
+        return -1; // not a valid quadrant
     }
 }

@@ -12,31 +12,18 @@ public class GameRules {
 
     }
 
-    public static Board transitionBoard(Board board, Turn turn) {
+    public Board transitionBoard(Board board, Turn turn) {
+        // The pushStone methods validate moves just to see if they're possible, not if they're legal.
+        // You should validate a Turn for "rule" legality prior to calling transitionBoard.
+        // This method will just do what you tell it to so long as it's possible to do it.
+
         Board newBoard = new Board(board);
-
-        // Logic for moving a stone from the aggressive move. Assumes the move has been validated.
-        Vector2 step = new Vector2(Utilities.clamp(turn.getAggressive().getHeading().x, -1, 1), Utilities.clamp(turn.getAggressive().getHeading().y, -1 ,1));
-        // calculate first stones new position
-        // if on top, move other stone same direction
-        // if not done, repeat
-        // put "our stone" down in it's final position
-        Vector2 intermediatePos = new Vector2(turn.getAggressive().getOrigin());
-        boolean done = false;
-        while (!done) {
-            intermediatePos = intermediatePos.add(step);
-            if (newBoard.getStone(intermediatePos) != null) {
-                newBoard.moveStone(intermediatePos, intermediatePos.add(step)); // This handles removing stones from the board if they cross boundaries
-            }
-            if (intermediatePos.equals(turn.getAggressive().getOrigin().add(turn.getAggressive().getHeading()))) {
-                done = true;
-            }
-        }
-
+        newBoard.pushStones(turn.getPassive());
+        newBoard.pushStones(turn.getAggressive());
         return newBoard;
     }
 
-    public static Turn validateTurn(Game game, Board board, Turn turn) {
+    public Turn validateTurn(Game game, Board board, Turn turn) {
 
         Turn validatedTurn = new Turn(turn.getPassive(), turn.getAggressive());
 
@@ -50,11 +37,40 @@ public class GameRules {
             validatedTurn.addError("Aggressive move origin is out of board boundaries: " + aggressiveOrigin.toString());
         }
 
+        // Ensure that passive and aggressive moves have the same heading
+        Vector2 passiveHeading = turn.getPassive().getHeading();
+        Vector2 aggressiveHeading = turn.getAggressive().getHeading();
+        if (false == passiveHeading.equals(aggressiveHeading)) {
+            validatedTurn.addError("Passive move and aggressive move do not have equal headings: " + passiveHeading.toString() + " " + aggressiveHeading.toString());
+        }
+
         // Ensure the passive and aggressive moves are attempting to move a stone of the color who's turn it is
         Stone.COLOR passiveStoneColor = board.getStone(passiveOrigin).getColor();
         Stone.COLOR aggressiveStoneColor = board.getStone(aggressiveOrigin).getColor();
         if (passiveStoneColor != game.getWhosTurnItIs() || aggressiveStoneColor != game.getWhosTurnItIs()) {
             validatedTurn.addError("Attempts to move stone of opposing players color when it is not their turn.");
+        }
+
+        // Ensure that the passive move is on the home board of the player who's turn it is
+        if (game.getWhosTurnItIs() == Stone.COLOR.WHITE &&
+                board.getQuadrant(turn.getPassive().getOrigin()) != 0 &&
+                board.getQuadrant(turn.getPassive().getOrigin()) != 1) {
+            validatedTurn.addError("Passive move is not on the home board of the player who's turn it is: " + game.getWhosTurnItIs().toString());
+        }
+        if (game.getWhosTurnItIs() == Stone.COLOR.BLACK &&
+                board.getQuadrant(turn.getPassive().getOrigin()) != 2 &&
+                board.getQuadrant(turn.getPassive().getOrigin()) != 3) {
+            validatedTurn.addError("Passive move is not on the home board of the player who's turn it is: " + game.getWhosTurnItIs().toString());
+        }
+
+        // Ensure that the passive and aggressive moves are on different horizontal boards.
+        int passiveQuadrant = board.getQuadrant(turn.getPassive().getOrigin());
+        int aggressiveQuadrant = board.getQuadrant(turn.getAggressive().getOrigin());
+        if ( (passiveQuadrant == 0 || passiveQuadrant == 2) && (aggressiveQuadrant != 1 && aggressiveQuadrant != 3)) {
+            validatedTurn.addError("Passive and aggressive moves must be on different color boards.");
+        }
+        if ( (passiveQuadrant == 1 || passiveQuadrant == 3) && (aggressiveQuadrant != 0 && aggressiveQuadrant != 2)) {
+            validatedTurn.addError("Passive and aggressive moves must be on different color boards.");
         }
 
         // Can't push through 2+ stones
@@ -74,7 +90,7 @@ public class GameRules {
             }
         }
 
-        // TODO FIXME add error strings from Move.validateMove(move) later on once you write it.
+
         return validatedTurn;
     }
 
@@ -87,7 +103,7 @@ public class GameRules {
      * @param board
      * @return
      */
-    public static Stone.COLOR getWinner(Game game, Board board) {
+    public Stone.COLOR getWinner(Game game, Board board) {
         return null;
     }
 

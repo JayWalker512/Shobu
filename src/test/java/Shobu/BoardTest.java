@@ -84,5 +84,76 @@ public class BoardTest {
         assertEquals(s1.getId(), b.getStone(new Vector2(0, 2)).getId());
         assertEquals(s2.getId(), b.getStone(new Vector2(0, 3)).getId());
         assertEquals(2, Utilities.countStonesOfColorOnBoard(b, Stone.COLOR.WHITE));
+
+        // Push one stone diagonal one space
+        b = new Board(false);
+        sf = StoneFactory.getInstance();
+        s1 = sf.createStone(Stone.COLOR.WHITE);
+        s2 = sf.createStone(Stone.COLOR.WHITE);
+        b.setStone(new Vector2(0,0), s1);
+        b.setStone(new Vector2(1,1), s2);
+        System.out.println("Board setup for moving one space diagonal test");
+        System.out.println(b.toString());
+        m = new Move(new Vector2(0,0), new Vector2(1, 1)); // one space downwards
+        b.pushStones(m);
+        System.out.println("After moving one space diagonal");
+        System.out.println(b.toString());
+        assertEquals(s1.getId(), b.getStone(new Vector2(1, 1)).getId());
+        assertEquals(s2.getId(), b.getStone(new Vector2(2, 2)).getId());
+        assertEquals(2, Utilities.countStonesOfColorOnBoard(b, Stone.COLOR.WHITE));
+
+        // Push two stones diagonal one space
+        b = new Board(false);
+        sf = StoneFactory.getInstance();
+        s1 = sf.createStone(Stone.COLOR.WHITE);
+        s2 = sf.createStone(Stone.COLOR.WHITE);
+        Stone s3 = sf.createStone(Stone.COLOR.WHITE);
+        b.setStone(new Vector2(0,0), s1);
+        b.setStone(new Vector2(1,1), s2);
+        b.setStone(new Vector2(2,2), s3);
+        System.out.println("Board setup for moving two stones one space diagonal test");
+        System.out.println(b.toString());
+        m = new Move(new Vector2(0,0), new Vector2(1, 1)); // one space downwards
+        b.pushStones(m);
+        System.out.println("After moving two stones diagonal one space");
+        System.out.println(b.toString());
+        assertEquals(s1.getId(), b.getStone(new Vector2(1, 1)).getId());
+        assertEquals(s2.getId(), b.getStone(new Vector2(2, 2)).getId());
+        assertEquals(s3.getId(), b.getStone(new Vector2(3, 3)).getId());
+        assertEquals(3, Utilities.countStonesOfColorOnBoard(b, Stone.COLOR.WHITE));
+
+        // Push one stone off the board test
+        b = new Board(false);
+        sf = StoneFactory.getInstance();
+        s1 = sf.createStone(Stone.COLOR.WHITE);
+        s2 = sf.createStone(Stone.COLOR.WHITE);
+        b.setStone(new Vector2(1,0), s1);
+        b.setStone(new Vector2(0,0), s2);
+        System.out.println("Board setup for pushing one stone off board test");
+        System.out.println(b.toString());
+        m = new Move(new Vector2(1,0), new Vector2(-1, 0)); // one space downwards
+        b.pushStones(m);
+        System.out.println("After pushing one stone off board");
+        System.out.println(b.toString());
+        assertEquals(s1.getId(), b.getStone(new Vector2(0, 0)).getId());
+        assertEquals(1, Utilities.countStonesOfColorOnBoard(b, Stone.COLOR.WHITE));
+
+        // Push two stones diagonal off the board
+        b = new Board(false);
+        sf = StoneFactory.getInstance();
+        s1 = sf.createStone(Stone.COLOR.WHITE);
+        s2 = sf.createStone(Stone.COLOR.WHITE);
+        s3 = sf.createStone(Stone.COLOR.WHITE);
+        b.setStone(new Vector2(1,1), s1);
+        b.setStone(new Vector2(2,2), s2);
+        b.setStone(new Vector2(3,3), s3);
+        System.out.println("Board setup for moving two stones two space diagonal test");
+        System.out.println(b.toString());
+        m = new Move(new Vector2(1,1), new Vector2(2, 2)); // one space downwards
+        b.pushStones(m);
+        System.out.println("After moving two stones diagonal two space");
+        System.out.println(b.toString());
+        assertEquals(s1.getId(), b.getStone(new Vector2(3, 3)).getId());
+        assertEquals(1, Utilities.countStonesOfColorOnBoard(b, Stone.COLOR.WHITE));
     }
 }

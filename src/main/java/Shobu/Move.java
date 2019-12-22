@@ -33,10 +33,11 @@ public class Move {
         this.errors = new ArrayList<>();
     }
 
-    // TODO FIXME this doesn't really make sense. Need origin, heading not from, to.
-
     // This method does not consider other stones in the way. Only spacing.
     public boolean isValid() {
+        // TODO FIXME this method should validate just that the move is orthogonal/diagonal.
+        // Other validation methods can determine if the move is "legal".
+
         //x's mark valid moves, o is the stone.
         //x_x_x
         //_xxx_

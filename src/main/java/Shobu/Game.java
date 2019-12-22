@@ -39,9 +39,7 @@ public class Game {
     }
 
     public boolean takeTurn(Turn turn) {
-        // TODO FIXME should I return the error string here to denote success/failure?
-
-        Turn validatedTurn = GameRules.validateTurn(this, this.getBoard(), turn);
+        Turn validatedTurn = rules.validateTurn(this, this.getBoard(), turn);
         if (validatedTurn.getErrors().size() != 0) {
             for (String e : validatedTurn.getErrors()) {
                 System.out.println(e);
@@ -49,7 +47,7 @@ public class Game {
             return false;
         }
 
-        this.setBoard(GameRules.transitionBoard(this.getBoard(), turn));
+        this.setBoard(rules.transitionBoard(this.getBoard(), turn));
 
         swapWhosTurnItIs();
         this.turnNumber++;

@@ -17,7 +17,7 @@ The names AI programs you wish to play against each other should be passed as ar
 Shobu game engine. For example:
 
 ```bash
-java -jar shobu.jar "ai-one.jar" "ml-bot.py"
+java -jar shobu.jar "bot-one.jar" "bot-two.py"
 ``` 
 
 I intend to support several different runtime environments so that AI's can be written in whatever
