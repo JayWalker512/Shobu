@@ -63,6 +63,21 @@ public class GameTest {
         assertEquals(16, Utilities.countStonesOfColorOnBoard(game.getBoard(), Stone.COLOR.WHITE));
 
         // Now attempt to make an illegal move, ensure that it is not validated and the next game state is correct.
+        String gameState = game.toString();
+        Turn illegalBlackTurn = new Turn(
+                new Move(
+                        new Vector2(2, 7), new Vector2(-2, 0)
+                ),
+                new Move(
+                        new Vector2(6, 3), new Vector2(-2, 0)
+                ));
+        assertFalse(game.takeTurn(illegalBlackTurn));
+        assertEquals(gameState, game.toString());
+        assertEquals(game.getWhosTurnItIs(), Stone.COLOR.BLACK);
+    }
+
+    @Test
+    public void testWinCondition() {
 
     }
 

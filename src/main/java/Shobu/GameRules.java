@@ -90,6 +90,13 @@ public class GameRules {
             }
         }
 
+        // Can't push own stone off the board/into a different quadrant
+        if (passiveQuadrant != board.getQuadrant(turn.getPassive().getOrigin().add(turn.getPassive().getHeading()))) {
+            validatedTurn.addError("Attempts to move own stone off the board/into another quadrant.");
+        }
+        if (aggressiveQuadrant != board.getQuadrant(turn.getAggressive().getOrigin().add(turn.getAggressive().getHeading()))) {
+            validatedTurn.addError("Attempts to move own stone off the board/into another quadrant.");
+        }
 
         return validatedTurn;
     }

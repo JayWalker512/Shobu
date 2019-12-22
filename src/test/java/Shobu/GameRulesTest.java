@@ -54,17 +54,16 @@ public class GameRulesTest {
 
         // Validate that passive move must be played on the current players "home board"
         // Illegal turn
-        // TODO FIXME Still need this particular intended check.
         t = new Turn(
-                new Move(new Vector2(0, 3), new Vector2(0, 1)), // top left board
-                new Move(new Vector2(4, 7), new Vector2(0,1)) // bottom right board
+                new Move(new Vector2(0, 3), new Vector2(0, -1)), // top left board
+                new Move(new Vector2(4, 7), new Vector2(0,-1)) // bottom right board
         );
         assertTrue(0 != g.getRules().validateTurn(g, g.getBoard(), t).getErrors().size());
 
         // Legal turn
         t = new Turn(
-                new Move(new Vector2(0, 7), new Vector2(0, 1)), // bottom left board
-                new Move(new Vector2(4, 3), new Vector2(0,1)) // top right board
+                new Move(new Vector2(0, 7), new Vector2(0, -1)), // bottom left board
+                new Move(new Vector2(4, 3), new Vector2(0,-1)) // top right board
         );
         assertEquals(0, g.getRules().validateTurn(g, g.getBoard(), t).getErrors().size());
 

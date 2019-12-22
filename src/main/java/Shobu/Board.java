@@ -174,6 +174,14 @@ public class Board {
         return representation.toString();
     }
 
+    /**
+     * 0|1
+     * ---
+     * 2|3
+     *
+     * @param location
+     * @return
+     */
     public int getQuadrant(Vector2 location) {
         if (location.x < 4 && location.y < 4) {
             return 0;

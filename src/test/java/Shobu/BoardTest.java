@@ -156,4 +156,17 @@ public class BoardTest {
         assertEquals(s1.getId(), b.getStone(new Vector2(3, 3)).getId());
         assertEquals(1, Utilities.countStonesOfColorOnBoard(b, Stone.COLOR.WHITE));
     }
+
+    @Test
+    public void testGetQuadrant() {
+        Board b = new Board(false);
+        assertEquals(0, b.getQuadrant(new Vector2(0,0)));
+        assertEquals(0, b.getQuadrant(new Vector2(3,3)));
+        assertEquals(1, b.getQuadrant(new Vector2(4,3)));
+        assertEquals(1, b.getQuadrant(new Vector2(4,0)));
+        assertEquals(2, b.getQuadrant(new Vector2(0,4)));
+        assertEquals(2, b.getQuadrant(new Vector2(3,4)));
+        assertEquals(3, b.getQuadrant(new Vector2(4,4)));
+        assertEquals(3, b.getQuadrant(new Vector2(7,7)));
+    }
 }
