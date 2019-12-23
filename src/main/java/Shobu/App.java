@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.util.Scanner;
+import java.util.*;
 import java.lang.ProcessBuilder;
 import java.lang.Process;
 
@@ -23,46 +23,40 @@ public class App {
     }
 
     public static void main(String[] args) {
-        String inputString = "lol"; //getStdin();
+        System.out.println("Arguments: " + Arrays.asList(args));
+        ListIterator<String> argListIter = Arrays.asList(args).listIterator();
+        while (argListIter.hasNext()) {
+            System.out.println(argListIter.next());
+        }
 
-        ProcessBuilder pb = new ProcessBuilder("cat");
-        Process p;
-        try {
-            p = pb.start();
-        } catch (Exception e) {
-            System.out.println("Couldn't start subprocess.");
+        // Validate command line arguments
+        Options programOptions = new Options(args);
+        if (programOptions.isValid() == false) {
+            System.out.println("Invalid arguments provided");
             return;
         }
-        if (p == null) {
-            return;
-        }
-        OutputStream subprocessInput = p.getOutputStream();
-        InputStream subprocessOutput = p.getInputStream();
-        int bytesActuallyRead = 0;
-        while (bytesActuallyRead < 30) {
-            try {
-                subprocessInput.write(inputString.getBytes());
-                subprocessInput.flush();
-            } catch (Exception e) {
-                System.out.println("Error writing to subprocess stdin.");
-                return;
-            }
-            StringBuilder sb = new StringBuilder();
-            byte b[] = new byte[2];
-            try {
-                while (subprocessOutput.available() > 0) {
-                    subprocessOutput.read(b, 1, 1);
-                    bytesActuallyRead += 1;
-                    break;
-                }
-                sb.append(new String(b));
-            } catch (Exception e) {
-                System.out.println("Error reading subprocess stdout");
-                return;
-            }
-            System.out.print(sb.toString());
-        }
-        p.destroy();
+
+        // Determine method to execute AI subprocesses (java, python3, etc)
+        // Start subprocesses and open IO pipes to them
+        AIController aiController = new AIController(programOptions.getProgramNames(), programOptions.getExtensions());
+
+        // Initialize Shobu game
+        // Send gamestate JSON to AI1
+        // Get JSON turn response
+        // Parse JSON turn response
+        // Validate turn response
+        // if valid: Game.takeTurn(parsedJson)
+        // else: GOTO Send gamestate JSON to AI1
+        // if game over quit, else continue
+
+        // Send gamestate JSON to AI2
+        // Get JSON turn response
+        // Parse JSON turn response
+        // Validate turn response
+        // if valid: Game.takeTurn(parsedJson)
+        // else: GOTO: Send gamestate JSON to AI2
+        // if game over quit, else continue
+
         tryJson();
     }
 
