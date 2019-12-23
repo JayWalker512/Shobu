@@ -2,14 +2,17 @@ package Shobu;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class AIController {
     private List<Process> subprocesses = new ArrayList<>();
     private List<OutputStream> subprocessInput = new ArrayList<>();
     private List<InputStream> subprocessOutput = new ArrayList<>();
+    private List<String> errors = new ArrayList<>();
+
+    public List<String> getErrors() {
+        return new ArrayList<>(errors);
+    }
 
     AIController(List<String> programNames, List<String> extensions) {
         // execute the program names according to their extensions, and populate subprocesses;
@@ -18,13 +21,14 @@ public class AIController {
         ProcessBuilder pb;
         while (programNamesIterator.hasNext()) {
             String ext = extensions.get(programNamesIterator.nextIndex());
-            String programName = programNamesIterator.next();
+            String programName = programNamesIterator.next(); // This string includes the program name and it's arguments
             if (ext == "jar") {
                 pb = new ProcessBuilder("java -jar " + programName);
             } else if (ext == "py") {
                 pb = new ProcessBuilder("python3 " + programName);
             } else {
-                pb = new ProcessBuilder(programName);
+                List<String> programAndArgs = Arrays.asList(programName.split("\\s+"));
+                pb = new ProcessBuilder(programAndArgs);
             }
             try {
                 Process p = pb.start();
@@ -32,11 +36,9 @@ public class AIController {
                 subprocessInput.add(p.getOutputStream());
                 subprocessOutput.add(p.getInputStream());
             } catch (Exception e) {
-                System.out.println("Couldn't start subprocess " + programName + "! " + e.getMessage());
+                this.errors.add("Couldn't start subprocess " + programName + "! " + e.getMessage());
             }
-
         }
-
 
         // Experimental code
         /*
@@ -80,6 +82,78 @@ public class AIController {
         }
         p.destroy();*/
 
+    }
+
+    //Send a JSON message to a subprocess
+    public boolean sendStringToSubprocess(int processIndex, String messageToSend) {
+        if (this.subprocessInput.get(processIndex) == null) {
+            return false;
+        }
+        try {
+            this.subprocessInput.get(processIndex).write(messageToSend.getBytes());
+            this.subprocessInput.get(processIndex).flush();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /** This method reads the output from a subprocess until it determines that it has received a complete
+     * JSON object. It does this by matching curly braces { } and with no other method or validation of the JSON
+     * structure. That's up to the caller! It then returns the String containing this object.
+     * @param processIndex
+     * @return
+     */
+    public String getNextJSONFromSubprocess(int processIndex) {
+        if (this.subprocessOutput.get(processIndex) == null) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        InputStream processOutput = this.subprocessOutput.get(processIndex);
+        int byteRead = 0;
+        try {
+            while (processOutput.available() == 0) {
+                byteRead = 0; // just loop and wait until input comes.
+            }
+            while (processOutput.available() > 0) {
+                byteRead = processOutput.read();
+                char asciiCharRead = (char)byteRead;
+                sb.append(asciiCharRead);
+                if (asciiCharRead == 'x') { // end of message marker is an x for now
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            return "";
+        }
+        return sb.toString();
+    }
+
+    enum JSON_DELIMITERS {
+        STARTED_OBJECT,
+        FINISHED_OBJECT,
+        NOT_RECOGNIZED
+    }
+
+    // Only making this public so I can write a test for it.
+    public static JSON_DELIMITERS matchCurlyBraces(Stack<Character> stack, char nextChar) {
+        if (stack.empty()) {
+            if (nextChar == '{') {
+                stack.push('{');
+                return JSON_DELIMITERS.STARTED_OBJECT;
+            }
+        }
+        if (nextChar == '{') {
+            stack.push('{');
+        } else if (nextChar == '}') {
+            stack.pop();
+            if (stack.empty()) {
+                return JSON_DELIMITERS.FINISHED_OBJECT;
+            }
+        }
+        return JSON_DELIMITERS.NOT_RECOGNIZED;
     }
 
 
