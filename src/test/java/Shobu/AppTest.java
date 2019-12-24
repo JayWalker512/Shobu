@@ -3,12 +3,24 @@
  */
 package Shobu;
 
+import com.google.gson.stream.JsonReader;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AppTest {
     @Test
-    public void testMe() {
-        assertEquals(1,1);
+    public void testIsTurnPayload() {
+        String turnPayload = "{\"type\":\"turn\", \"payload\":{}}";
+        String notTurnPayload = "{\"something\":\"else\"}";
+        assertTrue(App.isTurnPayload(turnPayload));
+        assertFalse(App.isTurnPayload(notTurnPayload));
+    }
+
+    @Test
+    public void testUnwrapTurnPayload() {
+        String turnMessage = "{ \"type\":\"turn\", \"payload\": {\"passive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} }, \"aggressive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} } } }";
+        JsonReader reader = App.unwrapTurnJsonObject(turnMessage);
+        Turn t = Turn.fromJsonReader(reader);
+        assertNotNull(t);
     }
 }

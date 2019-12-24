@@ -22,6 +22,59 @@ public class App {
         return s;
     }
 
+    /**
+     * This method checks if a JSON string provided is A. a JSON object and B. has a property "type" equal
+     * to "turn". That is all, it does not validate if a payload is present or do any other kind of checks.
+     * @param jsonInput
+     * @return true if the json object has "type":"turn", false otherwise.
+     */
+    public static boolean isTurnPayload(String jsonInput) {
+        JsonReader jsonReader = new JsonReader(new StringReader(jsonInput));
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if(!JsonToken.BEGIN_OBJECT.equals(nextToken)) { return false; }
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                nextToken = jsonReader.peek();
+                if (JsonToken.NAME.equals(nextToken)) {
+                    String name = jsonReader.nextName();
+                    if (name.equals("type")) {
+                        String value = jsonReader.nextString();
+                        if (value.equals("turn")) {
+                            return true;
+                        }
+                    }
+                }
+                jsonReader.skipValue();
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return false;
+    }
+
+    public static JsonReader unwrapTurnJsonObject(String jsonInput) {
+        JsonReader jsonReader = new JsonReader(new StringReader(jsonInput));
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if(!JsonToken.BEGIN_OBJECT.equals(nextToken)) { return null; }
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                nextToken = jsonReader.peek();
+                if (JsonToken.NAME.equals(nextToken)) {
+                    String name = jsonReader.nextName();
+                    if (name.equals("payload")) {
+                        return jsonReader;
+                    }
+                }
+                jsonReader.skipValue();
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         System.out.println("Arguments: " + Arrays.asList(args));
         ListIterator<String> argListIter = Arrays.asList(args).listIterator();
@@ -48,16 +101,18 @@ public class App {
         Game shobuGame = new Game(new GameRules(), new Board(true));
 
         // Send gamestate JSON to AI1
-        /*aiController.sendStringToSubprocess(0, shobuGame.toJson());
+        aiController.sendStringToSubprocess(0, shobuGame.toJson());
 
         // Get JSON turn response
         String turnJson = aiController.getNextJsonFromSubprocess(0);
 
         // Parse JSON turn response
-        Turn aiTurn = Turn.fromJson(turnJson);
+        isTurnPayload(turnJson);
+        //JsonReader turnJsonReader = unwrapTurnJsonObject(turnJson);
+        //Turn aiTurn = Turn.fromJsonReader(turnJson);
 
         // Validate turn response
-        Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);
+        /*Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);
 
         // if valid: Game.takeTurn(parsedJson)
         if (validatedTurn.getErrors().size() != 0) {

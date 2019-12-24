@@ -43,24 +43,24 @@ public class Turn {
             JsonToken nextToken = jsonReader.peek();
             if(!JsonToken.BEGIN_OBJECT.equals(nextToken)) { return null; }
             jsonReader.beginObject();
+
             while(jsonReader.hasNext()) {
                 nextToken = jsonReader.peek();
-                if(JsonToken.NAME.equals(nextToken)){
-                    nextToken = jsonReader.peek();
-                    if (nextToken == JsonToken.NAME) {
-                        String name  =  jsonReader.nextName();
-                        if (name.equals("passive")) {
-                            passiveMove = Move.fromJsonReader(jsonReader);
-                            if (passiveMove == null) { return null; }
-                        } else if (name.equals("aggressive")) {
-                            aggressiveMove = Move.fromJsonReader(jsonReader);
-                            if (aggressiveMove == null) { return null; }
-                        } else {
-                            return null; // unrecognized part of a turn
-                        }
+
+                if (nextToken == JsonToken.NAME) {
+                    String name  =  jsonReader.nextName();
+
+                    if (name.equals("passive")) {
+                        passiveMove = Move.fromJsonReader(jsonReader);
+                        if (passiveMove == null) { return null; }
+
+                    } else if (name.equals("aggressive")) {
+                        aggressiveMove = Move.fromJsonReader(jsonReader);
+                        if (aggressiveMove == null) { return null; }
+
+                    } else {
+                        return null; // unrecognized part of a turn
                     }
-                } else {
-                    return null;
                 }
             }
             jsonReader.endObject();
