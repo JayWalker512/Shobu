@@ -1,5 +1,10 @@
 package Shobu;
 
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+
+import java.io.IOException;
+
 public class Vector2 {
     public final int x;
     public final int y;
@@ -39,4 +44,36 @@ public class Vector2 {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
+    public static Vector2 fromJsonReader(JsonReader jsonReader) {
+        int x = 0;
+        int y = 0;
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if (nextToken != JsonToken.BEGIN_OBJECT) { return null; } // invalid!
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                nextToken = jsonReader.peek();
+                if (nextToken == JsonToken.NAME) {
+                    String name = jsonReader.nextName();
+                    if (name.equals("x")) {
+                        nextToken = jsonReader.peek();
+                        if (nextToken != JsonToken.NUMBER) { return null; }
+                        x = jsonReader.nextInt();
+                    } else if (name.equals("y")) {
+                        nextToken = jsonReader.peek();
+                        if (nextToken != JsonToken.NUMBER) { return null; }
+                        y = jsonReader.nextInt();
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+            jsonReader.endObject();
+            return new Vector2(x,y);
+        } catch (IOException e) {
+            return null;
+        }
+    }
 }

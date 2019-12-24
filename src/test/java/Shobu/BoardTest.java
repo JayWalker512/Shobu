@@ -180,5 +180,8 @@ public class BoardTest {
     public void testFromSerializedString() {
         Board b = Board.fromSerializedString(new Board(true).toSerializedString());
         assertEquals("oooooooo................xxxxxxxxoooooooo................xxxxxxxx", b.toSerializedString());
+
+        b = Board.fromSerializedString("xxxoooosdfj409th849");
+        assertEquals(null, b);
     }
 }

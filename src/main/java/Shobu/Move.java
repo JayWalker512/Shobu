@@ -1,5 +1,9 @@
 package Shobu;
 
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,5 +83,36 @@ public class Move {
 
     public List<String> getErrors() {
         return new ArrayList<>(this.errors);
+    }
+
+    public static Move fromJsonReader(JsonReader jsonReader) {
+        Vector2 origin = new Vector2(0,0);
+        Vector2 heading = new Vector2(0,0);
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if (nextToken != JsonToken.BEGIN_OBJECT) { return null; } // invalid!
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                nextToken = jsonReader.peek();
+                if (nextToken == JsonToken.NAME) {
+                    String name = jsonReader.nextName();
+                    if (name.equals("origin")) {
+                        origin = Vector2.fromJsonReader(jsonReader);
+                        if (origin == null) { return null; }
+                    } else if (name.equals("heading")) {
+                        heading = Vector2.fromJsonReader(jsonReader);
+                        if (heading == null) { return null; }
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+            jsonReader.endObject();
+            return new Move(origin, heading);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

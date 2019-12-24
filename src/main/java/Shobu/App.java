@@ -92,45 +92,4 @@ public class App {
         // if game over quit, else continue
 
     }
-
-    public static void tryJson() {
-
-        // seems the json reader does not expect to consume multiple consecutive discrete json objects
-        // so I'll have to deal with that myself.
-        String json = "{\"brand\" : \"Toyota\", \"doors\" : 5}\n{\"brand\" : \"Mercedes\", \"doors\" : 2}";
-
-        JsonReader jsonReader = new JsonReader(new StringReader(json));
-
-        try {
-            while(jsonReader.hasNext()){
-                JsonToken nextToken = jsonReader.peek();
-                System.out.println(nextToken);
-
-                if(JsonToken.BEGIN_OBJECT.equals(nextToken)){
-
-                    jsonReader.beginObject();
-
-                } else if(JsonToken.NAME.equals(nextToken)){
-
-                    String name  =  jsonReader.nextName();
-                    System.out.println(name);
-
-                } else if(JsonToken.STRING.equals(nextToken)){
-
-                    String value =  jsonReader.nextString();
-                    System.out.println(value);
-
-                } else if(JsonToken.NUMBER.equals(nextToken)){
-
-                    long value =  jsonReader.nextLong();
-                    System.out.println(value);
-
-                } else if (JsonToken.END_OBJECT.equals(nextToken)) {
-                    //jsonReader.endObject();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
