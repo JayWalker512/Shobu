@@ -39,25 +39,58 @@ public class App {
         // Determine method to execute AI subprocesses (java, python3, etc)
         // Start subprocesses and open IO pipes to them
         AIController aiController = new AIController(programOptions.getProgramNames(), programOptions.getExtensions());
+        if (aiController.getErrors().size() != 0) {
+            System.out.println("Failed to initialize AI controller.");
+            return;
+        }
 
         // Initialize Shobu game
+        Game shobuGame = new Game(new GameRules(), new Board(true));
+
         // Send gamestate JSON to AI1
+        /*aiController.sendStringToSubprocess(0, shobuGame.toJson());
+
         // Get JSON turn response
+        String turnJson = aiController.getNextJsonFromSubprocess(0);
+
         // Parse JSON turn response
+        Turn aiTurn = Turn.fromJson(turnJson);
+
         // Validate turn response
+        Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);
+
         // if valid: Game.takeTurn(parsedJson)
-        // else: GOTO Send gamestate JSON to AI1
+        if (validatedTurn.getErrors().size() != 0) {
+            for (String e : validatedTurn.getErrors()) {
+                System.out.println(e);
+            }
+            //VALIDATION FAILED TODO GOTO Send gamestate JSON to AI1
+        } else {
+            shobuGame.takeTurn(validatedTurn);
+        }
+
         // if game over quit, else continue
+        Stone.COLOR winnerColor = shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard());
+        if (winnerColor != null) {
+             System.out.println("Winner is " + winnerColor.toString());
+             return;
+        }*/
+
 
         // Send gamestate JSON to AI2
+
         // Get JSON turn response
+
         // Parse JSON turn response
+
         // Validate turn response
+
         // if valid: Game.takeTurn(parsedJson)
+
         // else: GOTO: Send gamestate JSON to AI2
+
         // if game over quit, else continue
 
-        tryJson();
     }
 
     public static void tryJson() {

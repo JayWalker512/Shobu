@@ -169,4 +169,16 @@ public class BoardTest {
         assertEquals(3, b.getQuadrant(new Vector2(4,4)));
         assertEquals(3, b.getQuadrant(new Vector2(7,7)));
     }
+
+    @Test
+    public void testSerializedString() {
+        Board b = new Board(true);
+        assertEquals("oooooooo................xxxxxxxxoooooooo................xxxxxxxx", b.toSerializedString());
+    }
+
+    @Test
+    public void testFromSerializedString() {
+        Board b = Board.fromSerializedString(new Board(true).toSerializedString());
+        assertEquals("oooooooo................xxxxxxxxoooooooo................xxxxxxxx", b.toSerializedString());
+    }
 }

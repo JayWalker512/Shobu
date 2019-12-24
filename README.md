@@ -11,14 +11,75 @@ To compile and run tests, use:
 ./gradlew build
 ``` 
 
+To generate a runnable jar file use:
+```bash
+./gradlew fatJar
+```
+
 ## Running
 
-The names AI programs you wish to play against each other should be passed as arguments to the 
-Shobu game engine. For example:
-
+The commands to start the AI subprocesses should be supplied as arguments to the game engine, 
+for example:
 ```bash
-java -jar shobu.jar "bot-one.jar" "bot-two.py"
+java -jar shobu.jar "java -jar bot-one.jar" "python3 bot-two.py"
 ``` 
 
-I intend to support several different runtime environments so that AI's can be written in whatever
-language you like, but in the near term I will be only supporting Java and Python AIs.
+This allows connecting bots written in any language to the game engine.
+
+## AI Communication
+
+Subprocesses must communicate with the Shobu game engine by receiving a Json representation of the game 
+state and responding with a Json representation of their intended move. Two examples follow:
+
+**Game state sent by engine**
+
+```json
+{
+  "type": "gamestate",
+  "payload": {
+    "board": "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
+    "turn": "BLACK",
+    "turnNumber": 0
+  }
+}
+```
+
+The board is represented as a string with white stones represented by the letter 'o' 
+and black stones represented by the letter 'x'. The character '.' denotes an empty space.
+Spaces are sent starting with the upper leftmost space (0,0) going right and then down
+to the next line. The example above shows the board in the default start-of-game configuration.
+
+**Player move sent by subprocess**
+
+```json
+{
+  "type": "turn",
+  "payload": {
+    "passive": {
+      "origin": {
+        "x": 0,
+        "y": 7
+      },
+      "heading": {
+        "x": 0,
+        "y": -1
+      }
+    }, 
+    "aggressive": {
+      "origin": {
+        "x": 4,
+        "y": 3
+      },
+      "heading": {
+        "x": 0,
+        "y": -1
+      }
+    }
+  }
+}
+```
+
+## Board layout
+
+The game board is represented as an 8x8 grid with coordinates (0,0) located in the upper
+leftmost space and (7,7) in the lower rightmost space.

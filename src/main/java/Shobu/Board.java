@@ -3,6 +3,7 @@ package Shobu;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Board {
     private List<Stone> stones;
@@ -196,5 +197,54 @@ public class Board {
             return 3;
         }
         return -1; // not a valid quadrant
+    }
+
+    public String toSerializedString() {
+        StringBuilder sb = new StringBuilder();
+        for (int y = 0; y < this.dimensions.y; y++) {
+            for (int x = 0; x < this.dimensions.x; x++) {
+                Stone s = this.getStone(new Vector2(x, y));
+                if (s == null) {
+                    sb.append('.');
+                } else if (s.getColor() == Stone.COLOR.BLACK) {
+                    sb.append('x');
+                } else if (s.getColor() == Stone.COLOR.WHITE) {
+                    sb.append('o');
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public static Board fromSerializedString(String serialized) {
+        // NOTE: this assumes an 8x8 board. If you ever want to "generalize" to larger boards, need to fix this
+        if (serialized.length() != 64) {
+            return null;
+        }
+        Board b = new Board(false);
+        StoneFactory sf = StoneFactory.getInstance();
+        List<Character> validChars = new ArrayList<>();
+        validChars.add(new Character('x'));
+        validChars.add(new Character('o'));
+        validChars.add(new Character('.'));
+        int i = 0;
+        for (char c : serialized.toCharArray()) {
+            int x = i % 8;
+            int y = Math.floorDiv(i, 8);
+            Vector2 location = new Vector2(x, y);
+            if (c == 'x') {
+                b.setStone(location, sf.createStone(Stone.COLOR.BLACK));
+            } else if (c == 'o') {
+                b.setStone(location, sf.createStone(Stone.COLOR.WHITE));
+            }
+
+            // if we come across an invalid char, bail out
+            if (validChars.indexOf(new Character(c)) == -1) {
+                return null;
+            }
+
+            i++;
+        }
+        return b;
     }
 }

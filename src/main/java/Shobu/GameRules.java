@@ -111,6 +111,7 @@ public class GameRules {
      * @return
      */
     public Stone.COLOR getWinner(Game game, Board board) {
+        // TODO FIXME write this
         return null;
     }
 

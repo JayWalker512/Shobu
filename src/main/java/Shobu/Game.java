@@ -63,4 +63,8 @@ public class Game {
 
         this.whosTurnIsIt = Stone.COLOR.BLACK;
     }
+
+    public String toJson() {
+        return "{\"type\":\"gamestate\", \"payload\": { \"board\": \"" + this.board.toSerializedString() + "\", \"turn\": \"" + this.getWhosTurnItIs().toString() + "\", \"turnNumber\": " + Integer.toString(this.getTurnNumber()) + "\"}}";
+    }
 }

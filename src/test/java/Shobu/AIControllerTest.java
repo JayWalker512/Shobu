@@ -24,34 +24,25 @@ public class AIControllerTest {
         AIController aic = new AIController(Arrays.asList(programs), Arrays.asList(extensions));
 
         // Send message 1
-        aic.sendStringToSubprocess(0, "hellox");
+        String messageToSend = "garbage {\"name\":\"value\", \"bla\":{}} garbage {\"other\":1}";
+        String jsonToGet = "{\"name\":\"value\", \"bla\":{}}";
 
-        // Assert that we receive the same message back
+        aic.sendStringToSubprocess(0, messageToSend);
+
+        // Assert that we receive the first json object back
         String receivedMessage = "";
         while (receivedMessage == "") {
-            receivedMessage = aic.getNextJSONFromSubprocess(0);
+            receivedMessage = aic.getNextJsonFromSubprocess(0);
         }
-        assertEquals("hellox", receivedMessage);
+        assertEquals(jsonToGet, receivedMessage);
 
-        // Send message 2
-        aic.sendStringToSubprocess(0, "worldx");
-
-        // Assert that we receive the same message back
+        //Assert that we get the second one afterwards
         receivedMessage = "";
+        jsonToGet = "{\"other\":1}";
         while (receivedMessage == "") {
-            receivedMessage = aic.getNextJSONFromSubprocess(0);
+            receivedMessage = aic.getNextJsonFromSubprocess(0);
         }
-        assertEquals("worldx", receivedMessage);
-
-        // Send message to second subprocess
-        aic.sendStringToSubprocess(1, "worldx");
-
-        // Assert that we receive the same message back
-        receivedMessage = "";
-        while (receivedMessage == "") {
-            receivedMessage = aic.getNextJSONFromSubprocess(1);
-        }
-        assertEquals("worldx", receivedMessage);
+        assertEquals(jsonToGet, receivedMessage);
 
     }
 
@@ -70,5 +61,4 @@ public class AIControllerTest {
             }
         }
     }
-
 }
