@@ -108,8 +108,8 @@ public class App {
 
         // Parse JSON turn response
         isTurnPayload(turnJson);
-        //JsonReader turnJsonReader = unwrapTurnJsonObject(turnJson);
-        //Turn aiTurn = Turn.fromJsonReader(turnJson);
+        JsonReader turnJsonReader = unwrapTurnJsonObject(turnJson);
+        Turn aiTurn = Turn.fromJsonReader(turnJsonReader);
 
         // Validate turn response
         /*Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);

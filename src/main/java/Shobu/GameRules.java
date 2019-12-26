@@ -1,6 +1,8 @@
 package Shobu;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameRules {
 
@@ -111,7 +113,32 @@ public class GameRules {
      * @return
      */
     public Stone.COLOR getWinner(Game game, Board board) {
-        // TODO FIXME write this
+        Map<Integer, Map<Stone.COLOR, Integer>> mapOfQuadrantsToStoneCountsByColor = new HashMap<>();
+        for (int i = 0; i < 4; i++) {
+            mapOfQuadrantsToStoneCountsByColor.put(i, new HashMap<Stone.COLOR, Integer>());
+        }
+        for (int y = 0; y < board.getDimensions().y; y++) {
+            for (int x = 0; x < board.getDimensions().x; x++) {
+                Vector2 location = new Vector2(x, y);
+                Stone s = board.getStone(location);
+                if (s != null) {
+                    // just need to mark that a stone of this color was present
+                    mapOfQuadrantsToStoneCountsByColor.get(board.getQuadrant(location)).put(s.getColor(), 1);
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            for (Stone.COLOR c : Stone.COLOR.values()) {
+                if (mapOfQuadrantsToStoneCountsByColor.get(i).get(c) == null) {
+                    if (c == Stone.COLOR.BLACK) { // there are no black stones in this quadrant, so white wins.
+                        return Stone.COLOR.WHITE;
+                    }
+                    return Stone.COLOR.BLACK;
+                }
+            }
+        }
+
         return null;
     }
 

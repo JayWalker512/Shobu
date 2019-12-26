@@ -35,10 +35,6 @@ public class Utilities {
         return stones;
     }
 
-    /*public static Vector2 getLocationOfNearestStoneFromList(List<Stone> stones, Vector2 relativeTo) {
-
-    }*/
-
     public static int countStonesOfColorOnBoard(Board b, Stone.COLOR c) {
         int sum = 0;
         for (int x = 0; x < b.getDimensions().x; x++) {
