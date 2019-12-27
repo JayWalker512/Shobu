@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

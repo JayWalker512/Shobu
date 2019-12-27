@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 import java.util.*;
 

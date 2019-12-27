@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 public final class StoneFactory {
     private int i = 0;

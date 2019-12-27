@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 import org.junit.Test;
 
@@ -69,8 +69,8 @@ public class GameRulesTest {
         assertTrue(0 != g.getRules().validateTurn(g, g.getBoard(), t).getErrors().size());
 
         t = new Turn(
-                new Move(new Vector2(0, 0), new Vector2(0, -1)), // top left board
-                new Move(new Vector2(4, 0), new Vector2(0,-1)) // top right board
+                new Move(new Vector2(0, 0), new Vector2(0, 1)), // top left board
+                new Move(new Vector2(4, 0), new Vector2(0,1)) // top right board
         );
         assertEquals(0, g.getRules().validateTurn(g, g.getBoard(), t).getErrors().size());
 

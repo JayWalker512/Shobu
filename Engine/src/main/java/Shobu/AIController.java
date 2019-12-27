@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -78,21 +78,18 @@ public class AIController {
             boolean objectFinished = false;
             Stack<Character> stack = new Stack<>();
 
-            // TODO FIXME I should make this just block on .read() instead of busy waiting.
             while (objectFinished == false) {
-                if (processOutput.available() > 0) {
-                    byteRead = processOutput.read();
-                    char asciiCharRead = (char)byteRead;
-                    JSON_DELIMITERS delimReceived = matchCurlyBraces(stack, asciiCharRead);
-                    if (delimReceived == JSON_DELIMITERS.STARTED_OBJECT) {
-                        objectStarted = true;
-                    }
-                    if (delimReceived == JSON_DELIMITERS.FINISHED_OBJECT) {
-                        objectFinished = true;
-                    }
-                    if (objectStarted) {
-                        sb.append(asciiCharRead);
-                    }
+                byteRead = processOutput.read();
+                char asciiCharRead = (char)byteRead;
+                JSON_DELIMITERS delimReceived = matchCurlyBraces(stack, asciiCharRead);
+                if (delimReceived == JSON_DELIMITERS.STARTED_OBJECT) {
+                    objectStarted = true;
+                }
+                if (delimReceived == JSON_DELIMITERS.FINISHED_OBJECT) {
+                    objectFinished = true;
+                }
+                if (objectStarted) {
+                    sb.append(asciiCharRead);
                 }
             }
         } catch (Exception e) {

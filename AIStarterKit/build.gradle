@@ -9,7 +9,6 @@ sourceCompatibility = 1.8
 
 project(':AIStarterKit') {
 
-
     repositories {
         // Use jcenter for resolving dependencies.
         // You can declare any Maven/Ivy/file repository here.

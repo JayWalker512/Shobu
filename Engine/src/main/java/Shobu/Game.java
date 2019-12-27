@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 public class Game {
     private Stone.COLOR whosTurnIsIt;

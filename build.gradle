@@ -12,5 +12,14 @@ buildscript {
     }
 }
 
+subprojects {
+    apply plugin: 'java'
+}
+
+project(':AIStarterKit') {
+    dependencies {
+        compile project(':Engine')
+    }
+}
 
 

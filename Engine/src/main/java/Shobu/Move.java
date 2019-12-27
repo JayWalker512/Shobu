@@ -1,4 +1,4 @@
-package Shobu.AIStarterKit;
+package Shobu;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
