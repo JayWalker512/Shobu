@@ -8,12 +8,12 @@ by sending the game state to the AI subprocesses on their STDIN and reading thei
 
 To compile and run tests, use:
 ```bash
-./gradlew build
+./gradlew Engine:build
 ``` 
 
 To generate a runnable jar file use:
 ```bash
-./gradlew fatJar
+./gradlew Engine:fatJar
 ```
 
 ## Running
@@ -26,10 +26,16 @@ java -jar shobu.jar "java -jar bot-one.jar" "python3 bot-two.py"
 
 This allows connecting bots written in any language to the game engine.
 
+You can examine and run the integration testing script for an example of how the game engine
+can be used in practice: 
+```bash
+./Engine/integration_script.sh
+```
+
 ## AI Communication
 
-Subprocesses must communicate with the Shobu game engine by receiving a Json representation of the game 
-state and responding with a Json representation of their intended move. Two examples follow:
+Subprocesses must communicate with the Shobu game engine by receiving a JSON representation of the game 
+state and responding with a JSON representation of their intended move. Two examples follow:
 
 **Game state sent by engine**
 
