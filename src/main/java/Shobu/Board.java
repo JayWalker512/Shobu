@@ -184,6 +184,15 @@ public class Board {
      * @return
      */
     public int getQuadrant(Vector2 location) {
+
+        // Check invalid bounds first
+        if (location.x < 0 || location.y < 0) {
+            return -1;
+        }
+        if (location.x > 7 || location.y > 7) {
+            return -1;
+        }
+
         if (location.x < 4 && location.y < 4) {
             return 0;
         }

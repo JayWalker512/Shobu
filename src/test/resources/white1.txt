@@ -1,0 +1,104 @@
+{
+  "type": "turn",
+  "payload": {
+    "passive": {
+      "origin": {
+        "x": 2,
+        "y": 0
+      },
+      "heading": {
+        "x": 1,
+        "y": 1
+      }
+    },
+    "aggressive": {
+      "origin": {
+        "x": 6,
+        "y": 0
+      },
+      "heading": {
+        "x": 1,
+        "y": 1
+      }
+    }
+  }
+}
+
+{
+  "type": "turn",
+  "payload": {
+    "passive": {
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "heading": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "aggressive": {
+      "origin": {
+        "x": 7,
+        "y": 1
+      },
+      "heading": {
+        "x": 0,
+        "y": 2
+      }
+    }
+  }
+}
+
+// FIXME This passive move pushes own stone off board, should fail validation.
+{
+  "type": "turn",
+  "payload": {
+    "passive": {
+      "origin": {
+        "x": 3,
+        "y": 0
+      },
+      "heading": {
+        "x": -1,
+        "y": 1
+      }
+    },
+    "aggressive": {
+      "origin": {
+        "x": 5,
+        "y": 0
+      },
+      "heading": {
+        "x": -1,
+        "y": 1
+      }
+    }
+  }
+}
+
+{
+  "type": "turn",
+  "payload": {
+    "passive": {
+      "origin": {
+        "x": 1,
+        "y": 0
+      },
+      "heading": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "aggressive": {
+      "origin": {
+        "x": 4,
+        "y": 1
+      },
+      "heading": {
+        "x": 0,
+        "y": 2
+      }
+    }
+  }
+}
