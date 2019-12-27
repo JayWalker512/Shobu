@@ -141,6 +141,11 @@ public class Board {
         this.setStone(to, stoneToMove);
     }
 
+    /**
+     * This method is for a human-interpretable representation of the game board. This is not the same string
+     * representation used for serialization of a board.
+     * @return
+     */
     public String toString() {
         StringBuilder representation = new StringBuilder();
 
@@ -187,6 +192,8 @@ public class Board {
         if (location.x < 0 || location.y < 0) {
             return -1;
         }
+
+        // Could do >= dimensions here for generality
         if (location.x > 7 || location.y > 7) {
             return -1;
         }

@@ -107,18 +107,20 @@ public class App {
         String nextJson = App.getNextJsonFromStdin();
         if (isGameStatePayload(nextJson)) {
             JsonReader jsonReader = unwrapGameStateJsonObject(nextJson);
+            GameState g = GameState.fromJsonReader(jsonReader);
+
+            // Enumerate valid Turns
+            //List<Turn> validTurns = enumerateValidTurns(g.getBoard(), g.getWhosTurnIsIt());
+
+            // Choose a Turn to play
+            //Turn chosenTurn = validTurns.get(random);
+
+            // Send turn back to Engine as JSON
+            //System.out.println(chosenTurn.toJson());
+
+            // Repeat
         }
-        //Game g = new Game(new GameRules(), new Board(false));
-        //Board b = new Board.fromSerializedString("{}");
 
-        // Parse JSON into board representation
 
-        // Enumerate valid Turns
-
-        // Choose a Turn to play
-
-        // Send turn back to Engine as JSON
-
-        // Repeat
     }
 }

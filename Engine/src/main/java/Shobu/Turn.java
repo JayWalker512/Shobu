@@ -69,4 +69,9 @@ public class Turn {
         }
         return null;
     }
+
+    public String toJson() {
+        // TODO WRITE ME
+        return "";
+    }
 }

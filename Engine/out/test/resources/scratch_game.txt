@@ -1,0 +1,107 @@
+Game start
+ 0123 4567
+0oooo|oooo
+1    |
+2    |
+3xxxx|xxxx
+ ---------
+4oooo|oooo
+5    |
+6    |
+7xxxx|xxxx
+
+Black moves p(0,7)->(0,5) a(7,3)->(7,1)  done
+
+oooo|oooo
+    |   x
+    |
+xxxx|xxx
+---------
+oooo|oooo
+x   |
+    |
+ xxx|xxxx
+
+White moves p(2,0)->(3,1) a(6,0)->(7,1) done
+
+oo o|oo o
+   o|   o
+    |
+xxxx|xxx
+---------
+oooo|oooo
+x   |
+    |
+ xxx|xxxx
+
+Black moves p(1,7)->(2,6) a(6,3)->(7,2) done
+
+oo o|oo o
+   o|   o
+    |   x
+xxxx|xx
+---------
+oooo|oooo
+x   |
+  x |
+  xx|xxxx
+
+White moves p(0,0)->(0,2) a(7,1)->(7,3) done
+
+ o o|oo o
+   o|
+o   |
+xxxx|xx o
+---------
+oooo|oooo
+x   |
+  x |
+  xx|xxxx
+
+Black moves p(3,7)->(3,5) a(4,3)->(4,1) done
+
+ o o|oo o
+   o|x
+o   |
+xxxx| x o
+---------
+oooo|oooo
+x  x|
+  x |
+  x |xxxx
+
+White moves p(3,0)->(2,1) a(5,0)->(4,1) done
+
+ o  |o  o
+  oo|o
+o   |
+xxxx| x o
+---------
+oooo|oooo
+x  x|
+  x |
+  x |xxxx
+
+Black moves p(3,5)->(2,5) a(5,3)->(4,3) done
+
+ o  |o  o
+  oo|o
+o   |
+xxxx|x  o
+---------
+oooo|oooo
+x x |
+  x |
+  x |xxxx
+
+White moves p(1,0)->(1,2) a(4,1)->(4,3)
+
+    |o  o
+  oo|
+oo  |
+xxxx|o  o
+---------
+oooo|oooo
+x x |
+  x |
+  x |xxxx

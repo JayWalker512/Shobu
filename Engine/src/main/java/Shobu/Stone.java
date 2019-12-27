@@ -2,7 +2,7 @@ package Shobu;
 
 public class Stone {
 
-    enum COLOR {
+    public enum COLOR {
         BLACK,
         WHITE
     };
