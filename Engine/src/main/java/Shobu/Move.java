@@ -36,6 +36,11 @@ public class Move {
         this.errors = new ArrayList<>();
     }
 
+    public Move(Move m) {
+        this.origin = m.getOrigin();
+        this.heading = m.getHeading();
+    }
+
     // This method does not consider other stones in the way. Only spacing.
     public boolean isValid() {
         // TODO FIXME this method should validate just that the move is orthogonal/diagonal.
@@ -64,7 +69,7 @@ public class Move {
         invalidMoves.add(new Vector2(1,2));
 
         for (Vector2 invalid : invalidMoves) {
-            if (heading.equals(invalid) == true) {
+            if (heading.equals(invalid)) {
                 return false;
             }
         }
@@ -113,6 +118,10 @@ public class Move {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public String toString() {
+        return toJson();
     }
 
     public String toJson() {

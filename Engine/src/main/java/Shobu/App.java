@@ -91,30 +91,38 @@ public class App {
         colorToProcessMap.put(Stone.COLOR.BLACK, 0);
         colorToProcessMap.put(Stone.COLOR.WHITE, 1);
 
-        while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null) {
-            System.out.println(shobuGame.getWhosTurnItIs().toString() + " player's turn.");
+        try {
+            while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null) {
+                System.out.println(shobuGame.getWhosTurnItIs().toString() + " player's turn (" + shobuGame.getTurnNumber() + ")");
 
-            // Send gamestate JSON to AI whos turn it is
-            aiController.sendStringToSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()), shobuGame.toJson());
+                // Send gamestate JSON to AI whos turn it is
+                aiController.sendStringToSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()), shobuGame.toJson());
 
-            // Get their turn response (TODO this needs a timeout to die if there's a problem)
-            String turnJson = aiController.getNextJsonFromSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()));
+                // Get their turn response (TODO this needs a timeout to die if there's a problem)
+                String turnJson = aiController.getNextJsonFromSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()));
 
-            // Parse JSON turn response
-            if (isTurnPayload(turnJson)) {
-                JsonReader turnJsonReader = unwrapTurnJsonObject(turnJson);
-                Turn aiTurn = Turn.fromJsonReader(turnJsonReader);
-                Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);
-                if (validatedTurn.getErrors().size() != 0) {
-                    for (String e : validatedTurn.getErrors()) {
-                        System.out.println(e);
+                // Parse JSON turn response
+                if (isTurnPayload(turnJson)) {
+                    JsonReader turnJsonReader = unwrapTurnJsonObject(turnJson);
+                    Turn aiTurn = Turn.fromJsonReader(turnJsonReader);
+                    Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);
+                    if (validatedTurn.getErrors().size() != 0) {
+                        for (String e : validatedTurn.getErrors()) {
+                            System.out.println(e);
+                        }
+                    } else { // Turn was valid, advance the game state
+                        shobuGame.takeTurn(validatedTurn);
+                        System.out.println(shobuGame.getBoard().toString());
                     }
-                } else { // Turn was valid, advance the game state
-                    shobuGame.takeTurn(validatedTurn);
-                    System.out.println(shobuGame.getBoard().toString());
                 }
             }
+            System.out.println("Winner is: " + shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).toString());
+        } catch (Exception e) {
+            // Kill subprocesses
+            aiController.killSubprocesses();
+            System.out.println("The Shobu game engine encountered an error: " + e.toString() + "\n" + "Error message: " + e.getMessage() + "\n");
+            throw e; // just so we can see the stack trace.
         }
-        System.out.println("Winner is: " + shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).toString());
+        aiController.killSubprocesses();
     }
 }

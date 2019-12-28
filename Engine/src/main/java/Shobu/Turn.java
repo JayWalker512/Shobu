@@ -15,16 +15,16 @@ public class Turn {
 
     public Turn(Move passive, Move aggressive) {
         this.errors = new ArrayList<>();
-        this.passive = passive;
-        this.aggressive = aggressive;
+        this.passive = new Move(passive);
+        this.aggressive = new Move(aggressive);
     }
 
     public Move getPassive() {
-        return passive;
+        return new Move(passive);
     }
 
     public Move getAggressive() {
-        return aggressive;
+        return new Move(aggressive);
     }
 
     public void addError(String e) {
@@ -71,6 +71,6 @@ public class Turn {
     }
 
     public String toJson() {
-        return "{\"passive\":" + passive.toJson() + ", {\"aggressive\": " + aggressive.toJson() + "}";
+        return "{\"passive\":" + passive.toJson() + ", \"aggressive\": " + aggressive.toJson() + "}";
     }
 }

@@ -35,6 +35,12 @@ public class AIController {
         }
     }
 
+    public void killSubprocesses() {
+        for (Process subprocess : subprocesses) {
+            subprocess.destroyForcibly();
+        }
+    }
+
     //Send a JSON message to a subprocess
     public boolean sendStringToSubprocess(int processIndex, String messageToSend) {
         if (this.subprocessInput.get(processIndex) == null) {

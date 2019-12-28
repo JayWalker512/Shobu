@@ -29,6 +29,14 @@ public class GameRules {
 
         Turn validatedTurn = new Turn(turn.getPassive(), turn.getAggressive());
 
+        if (turn.getPassive().isValid() == false) {
+            validatedTurn.addError("Passive move is not a valid Shobu move: " + turn.getPassive().toString());
+        }
+        if (turn.getAggressive().isValid() == false) {
+            validatedTurn.addError("Aggressive move is not a valid Shobu move: " + turn.getAggressive().toString());
+        }
+        if (validatedTurn.getErrors().size() > 0) { return validatedTurn; } // no point in continuing. Some things might break, errors would be meaningless.
+
         // Ensure the passive and aggressive origins are in bounds of the board
         Vector2 passiveOrigin = turn.getPassive().getOrigin();
         if (passiveOrigin.x > board.getDimensions().x || passiveOrigin.x < 0) {

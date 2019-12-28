@@ -171,7 +171,7 @@ public class App {
         List<Turn> legalTurns = new ArrayList<>();
         for (Turn t : possibleTurns) {
             // Validate turns and add them to a list of legal turns
-            if (game.getRules().validateTurn(game, board, t).getErrors().size() != 0) {
+            if (game.getRules().validateTurn(game, board, t).getErrors().size() == 0) {
                 legalTurns.add(t);
             }
         }
@@ -212,7 +212,7 @@ public class App {
                 Turn chosenTurn = legalTurns.get(new Random().nextInt(legalTurns.size()));
 
                 // Send turn back to Engine as JSON
-                System.out.println(chosenTurn.toJson());
+                System.out.println("{\"type\": \"turn\", \"payload\": " + chosenTurn.toJson() + "}");
             }
         }
     }
