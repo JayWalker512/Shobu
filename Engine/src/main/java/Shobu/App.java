@@ -111,6 +111,7 @@ public class App {
                             System.out.println(e);
                         }
                     } else { // Turn was valid, advance the game state
+                        System.out.println(shobuGame.getWhosTurnItIs().toString() + " plays " + validatedTurn.toString());
                         shobuGame.takeTurn(validatedTurn);
                         System.out.println(shobuGame.getBoard().toString());
                     }

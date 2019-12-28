@@ -71,9 +71,6 @@ public class AIController {
         InputStream processOutput = this.subprocessOutput.get(processIndex);
         int byteRead = 0;
         try {
-            while (processOutput.available() == 0) {
-                byteRead = 0; // just loop and wait until input comes.
-            }
             boolean objectStarted = false;
             boolean objectFinished = false;
             Stack<Character> stack = new Stack<>();

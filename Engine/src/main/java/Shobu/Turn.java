@@ -70,6 +70,10 @@ public class Turn {
         return null;
     }
 
+    public String toString() {
+        return toJson();
+    }
+
     public String toJson() {
         return "{\"passive\":" + passive.toJson() + ", \"aggressive\": " + aggressive.toJson() + "}";
     }

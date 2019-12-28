@@ -5,3 +5,11 @@ The AI Starter Kit provides a basic framework for writing an AI that interacts w
 This kit is utilizes many of the classes and methods from the base game framework to simplify and reduce the amount of code that
 needed to be written. If you wish to write a Shobu AI in a different programming language, you can use this code as a template 
 from which to port the relevant classes and methods necessary to implement the basic AI capabilities.
+
+## Building
+
+Run the following to compile the AI Starter Kit jar file:
+
+```bash
+./gradlew AIStarterKit:fatJar
+```

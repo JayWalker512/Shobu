@@ -27,6 +27,7 @@ public class App {
 
             while (objectFinished == false) {
                 byteRead = processOutput.read();
+                // TODO FIXME if the input stream ends, we should exit the program
                 char asciiCharRead = (char)byteRead;
                 AIController.JSON_DELIMITERS delimReceived = AIController.matchCurlyBraces(stack, asciiCharRead);
                 if (delimReceived == AIController.JSON_DELIMITERS.STARTED_OBJECT) {
@@ -207,6 +208,8 @@ public class App {
 
                 // Enumerate legal Turns
                 List<Turn> legalTurns = enumerateLegalTurns(shobuGame);
+
+                // TODO FIXME it is possible to get to a state where you have 0 legal moves. Need to gracefully quit (lose)
 
                 // Choose a Turn to play
                 Turn chosenTurn = legalTurns.get(new Random().nextInt(legalTurns.size()));
