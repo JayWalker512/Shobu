@@ -1,13 +1,14 @@
 package AIStarterKit;
 
 import Shobu.App;
-import Shobu.GameState;
+import AIStarterKit.GameState;
 import Shobu.Stone;
 import com.google.gson.stream.JsonReader;
 import org.junit.Test;
 
 import java.io.StringReader;
 
+import static AIStarterKit.App.unwrapGameStateJsonObject;
 import static org.junit.Assert.*;
 
 public class GameStateTest {
@@ -23,7 +24,7 @@ public class GameStateTest {
                 "  }\n" +
                 "}";
 
-        GameState gs = GameState.fromJsonReader(App.unwrapGameStateJsonObject(gameStateJson));
+        GameState gs = GameState.fromJsonReader(unwrapGameStateJsonObject(gameStateJson));
         assertNotNull(gs);
         assertEquals(Stone.COLOR.BLACK, gs.getWhosTurnIsIt());
         assertEquals(0, gs.getTurnNumber());

@@ -13,7 +13,7 @@ public class Turn {
     private Move aggressive;
     private List<String> errors;
 
-    Turn(Move passive, Move aggressive) {
+    public Turn(Move passive, Move aggressive) {
         this.errors = new ArrayList<>();
         this.passive = passive;
         this.aggressive = aggressive;
@@ -71,7 +71,6 @@ public class Turn {
     }
 
     public String toJson() {
-        // TODO WRITE ME
-        return "";
+        return "{\"passive\":" + passive.toJson() + ", {\"aggressive\": " + aggressive.toJson() + "}";
     }
 }

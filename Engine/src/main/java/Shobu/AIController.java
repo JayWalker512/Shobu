@@ -22,14 +22,8 @@ public class AIController {
         while (programNamesIterator.hasNext()) {
             String ext = extensions.get(programNamesIterator.nextIndex());
             String programName = programNamesIterator.next(); // This string includes the program name and it's arguments
-            if (ext == "jar") {
-                pb = new ProcessBuilder("java -jar " + programName);
-            } else if (ext == "py") {
-                pb = new ProcessBuilder("python3 " + programName);
-            } else {
-                List<String> programAndArgs = Arrays.asList(programName.split("\\s+"));
-                pb = new ProcessBuilder(programAndArgs);
-            }
+            List<String> programAndArgs = Arrays.asList(programName.split("\\s+"));
+            pb = new ProcessBuilder(programAndArgs);
             try {
                 Process p = pb.start();
                 subprocesses.add(p);
@@ -98,7 +92,7 @@ public class AIController {
         return sb.toString();
     }
 
-    enum JSON_DELIMITERS {
+    public enum JSON_DELIMITERS {
         STARTED_OBJECT,
         FINISHED_OBJECT,
         NOT_RECOGNIZED

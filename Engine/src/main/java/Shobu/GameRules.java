@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class GameRules {
 
-    GameRules() {
+    public GameRules() {
 
     }
 
-    GameRules(GameRules gr) {
+    public GameRules(GameRules gr) {
 
     }
 

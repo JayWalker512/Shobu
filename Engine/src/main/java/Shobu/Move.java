@@ -114,4 +114,8 @@ public class Move {
             return null;
         }
     }
+
+    public String toJson() {
+        return "{\"origin\": " + origin.toJson() + ", \"heading\": " + heading.toJson() + "}";
+    }
 }

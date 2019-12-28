@@ -1,9 +1,12 @@
-package Shobu;
+package AIStarterKit;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
+
+import Shobu.Board;
+import Shobu.Stone;
 
 public class GameState {
     private Board board;

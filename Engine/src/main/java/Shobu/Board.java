@@ -1,6 +1,7 @@
 package Shobu;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Board {
@@ -89,6 +90,7 @@ public class Board {
         return -1; // couldn't find it
     }
 
+    // TODO FIXME returning null elements in this list is fucking stupid. It's a leaky abstraction.
     public List<Stone> getStones() {
         //System.out.println("called getStones()");
         List<Stone> stonesList = new ArrayList<>();
@@ -139,6 +141,22 @@ public class Board {
 
         this.setStone(from, null); // remove the stone from it's original location
         this.setStone(to, stoneToMove);
+    }
+
+    public List<Stone> getStonesOfColorOnHomeBoard(Stone.COLOR whosHomeBoard) {
+        List<Stone> stonesOfColorOnHomeBoard = new ArrayList<>();
+        for (Stone s : getStones()) {
+            if (s == null) { continue; }
+            if (s.getColor() != whosHomeBoard) { continue; }
+            int quadrant = getQuadrant(getStoneLocation(s.getId()));
+            if (whosHomeBoard == Stone.COLOR.BLACK) {
+                if (quadrant == 2 || quadrant == 3) { stonesOfColorOnHomeBoard.add(s); }
+            }
+            if (whosHomeBoard == Stone.COLOR.WHITE) {
+                if (quadrant == 0 || quadrant == 1) { stonesOfColorOnHomeBoard.add(s); }
+            }
+        }
+        return Collections.unmodifiableList(stonesOfColorOnHomeBoard);
     }
 
     /**

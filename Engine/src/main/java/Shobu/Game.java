@@ -23,9 +23,16 @@ public class Game {
         this.board = new Board(board);
     }
 
-    Game(GameRules rules, Board board) {
+    public Game(GameRules rules, Board board) {
         this.whosTurnIsIt = Stone.COLOR.BLACK;
         this.turnNumber = 0;
+        this.rules = new GameRules(rules);
+        this.board = new Board(board);
+    }
+
+    public Game(GameRules rules, Board board, Stone.COLOR whosTurnIsIt, int turnNumber) {
+        this.whosTurnIsIt = whosTurnIsIt;
+        this.turnNumber = turnNumber;
         this.rules = new GameRules(rules);
         this.board = new Board(board);
     }
@@ -65,6 +72,6 @@ public class Game {
     }
 
     public String toJson() {
-        return "{\"type\":\"gamestate\", \"payload\": { \"board\": \"" + this.board.toSerializedString() + "\", \"turn\": \"" + this.getWhosTurnItIs().toString() + "\", \"turnNumber\": " + Integer.toString(this.getTurnNumber()) + "\"}}";
+        return "{\"type\":\"gamestate\", \"payload\": { \"board\": \"" + this.board.toSerializedString() + "\", \"turn\": \"" + this.getWhosTurnItIs().toString() + "\", \"turnNumber\": " + Integer.toString(this.getTurnNumber()) + "}}";
     }
 }

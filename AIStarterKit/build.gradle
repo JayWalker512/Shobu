@@ -26,14 +26,14 @@ project(':AIStarterKit') {
 
     application {
         // Define the main class for the application.
-        mainClassName = 'Shobu.AiStarterKit.App'
+        mainClassName = 'AiStarterKit.App'
     }
 
     jar {
         manifest {
             attributes(
                     'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                    'Main-Class': 'Shobu.AIStarterKit.App'
+                    'Main-Class': 'AIStarterKit.App'
             )
         }
     }
@@ -42,7 +42,7 @@ project(':AIStarterKit') {
         manifest {
             attributes(
                     'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                    'Main-Class': 'Shobu.AIStarterKit.App'
+                    'Main-Class': 'AIStarterKit.App'
             )
         }
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

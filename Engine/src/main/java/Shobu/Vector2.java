@@ -9,12 +9,12 @@ public class Vector2 {
     public final int x;
     public final int y;
 
-    Vector2(int x, int y) {
+    public Vector2(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    Vector2(Vector2 v) {
+    public Vector2(Vector2 v) {
         this.x = v.x;
         this.y = v.y;
     }
@@ -75,5 +75,9 @@ public class Vector2 {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public String toJson() {
+        return "{\"x\": " + Integer.toString(x) + ", \"y\": " + Integer.toString(y) + "}";
     }
 }
