@@ -92,6 +92,7 @@ public class App {
         colorToProcessMap.put(Stone.COLOR.WHITE, 1);
 
         try {
+            // TODO add 1k turn limit because it's possible to get an infinite game/stalemate and we don't want that.
             while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null) {
                 System.out.println(shobuGame.getWhosTurnItIs().toString() + " player's turn (" + shobuGame.getTurnNumber() + ")");
 

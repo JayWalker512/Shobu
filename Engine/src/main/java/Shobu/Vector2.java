@@ -34,6 +34,18 @@ public class Vector2 {
         return new Vector2(this.x + a.x, this.y + a.y);
     }
 
+    /**
+     * Extends the vector values by +-1 with respect to being above or below zero.
+     * @param spaces
+     * @return
+     */
+    public Vector2 extend(int spaces) {
+        return new Vector2(
+                this.x + (this.x > 0 ? 1 : -1),
+                this.y + (this.y > 0 ? 1 : -1)
+        );
+    }
+
     public static double euclideanDistance(Vector2 a, Vector2 b) {
         double ac = Math.abs(b.y - a.y);
         double cb = Math.abs(b.x - a.x);

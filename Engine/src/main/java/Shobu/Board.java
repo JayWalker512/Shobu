@@ -10,7 +10,18 @@ public class Board {
 
     public Board(Board b) {
         this.dimensions = b.getDimensions();
-        this.stones = b.getStones();
+        this.stones = new ArrayList<>();
+        for (int y = 0; y < this.dimensions.y; y++) {
+            for (int x = 0; x < this.dimensions.x; x++) {
+                Stone s = b.getStone(new Vector2(x,y));
+                if (s != null) {
+                    this.stones.add(new Stone(s));
+                } else {
+                    this.stones.add(null);
+                }
+            }
+        }
+
     }
 
     public Board(boolean initializeDefaultStones) {
@@ -59,6 +70,10 @@ public class Board {
     }
 
     public Stone getStone(Vector2 location) {
+        // bounds check
+        if (location.x > this.dimensions.x || location.y > this.dimensions.y || location.x < 0 || location.y < 0) {
+            return null;
+        }
 
         // bounds check
         int index = location.x + (location.y * this.dimensions.x);
@@ -90,7 +105,6 @@ public class Board {
         return -1; // couldn't find it
     }
 
-    // TODO FIXME returning null elements in this list is fucking stupid. It's a leaky abstraction.
     public List<Stone> getStones() {
         //System.out.println("called getStones()");
         List<Stone> stonesList = new ArrayList<>();
@@ -98,31 +112,43 @@ public class Board {
             if (s != null) {
                 //System.out.println(s.toString());
                 stonesList.add(new Stone(s));
-            } else {
-                //System.out.println("Added a null element.");
-                stonesList.add(s); // null
             }
-
         }
         return stonesList;
     }
 
-    public void pushStones(Move m) {
+    /**
+     * Pushes stones on the board according to the move provided. This method moves stones regardless of whether the move
+     * legal in the rules or not.
+     * @param m
+     * @return the number of stones that were pushed, including self.
+     */
+    public int pushStones(Move m) {
         // If it's not orthogonal or diagonal, this algorithm won't push the stones correctly so we bail.
         if (m.isValid() == false) {
-            return;
+            return 0;
         }
 
+        List<Integer> seenIds = new ArrayList<>();
+        seenIds = pushStonesInternal(m, seenIds);
+        return seenIds.size() + 1; // include self
+    }
+
+    private List<Integer> pushStonesInternal(Move m, List<Integer> seenIds) {
         // Get the stones intersected by a move
         List<Stone> intersectedStones = Utilities.getStonesIntersected(this, m);
         for (Stone s : intersectedStones) {
             // Push the stones relative to any we intersected. This is how a long line can get pushed.
+            if (-1 == seenIds.indexOf(s.getId())) {
+                seenIds.add(s.getId());
+            }
             Move intersectedMove = new Move(this.getStoneLocation(s.getId()), m.getHeading());
-            this.pushStones(intersectedMove);
+            this.pushStonesInternal(intersectedMove, seenIds);
         }
 
         // Since intersections have been dealt with and moved previously, now we can move self.
         this.moveStone(m.getOrigin(), m.getOrigin().add(m.getHeading()));
+        return seenIds;
     }
 
     public void moveStone(Vector2 from, Vector2 to) {

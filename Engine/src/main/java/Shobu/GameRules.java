@@ -54,6 +54,9 @@ public class GameRules {
             validatedTurn.addError("Passive move and aggressive move do not have equal headings: " + passiveHeading.toString() + " " + aggressiveHeading.toString());
         }
 
+        // TODO FIXME Ensure that there is a stone where the moves originate from
+
+
         // Ensure the passive and aggressive moves are attempting to move a stone of the color who's turn it is
         Stone.COLOR passiveStoneColor = board.getStone(passiveOrigin).getColor();
         Stone.COLOR aggressiveStoneColor = board.getStone(aggressiveOrigin).getColor();
@@ -91,6 +94,17 @@ public class GameRules {
         intersectedStones = Utilities.getStonesIntersected(board, turn.getAggressive());
         if (intersectedStones.size() >= 2) {
             validatedTurn.addError("Attempts to push more than 1 stone with aggressive move.");
+        }
+
+        // Make a copy of the board and see how many stones the moves push through.
+        Board pushBoard = new Board(board);
+        int passivePushedStones = pushBoard.pushStones(turn.getPassive());
+        int aggressivePushedStones = pushBoard.pushStones(turn.getAggressive());
+        if (passivePushedStones > 2) {
+            validatedTurn.addError("Passive move pushes through more than 1 stone: " + turn.getPassive().toString());
+        }
+        if (aggressivePushedStones > 2) {
+            validatedTurn.addError("Aggressive move pushes through more than 1 stone: " + turn.getAggressive().toString());
         }
 
         // Can't push stones of own color

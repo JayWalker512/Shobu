@@ -59,7 +59,7 @@ public class BoardTest {
         System.out.println("Board setup for moving one space down test");
         System.out.println(b.toString());
         Move m = new Move(new Vector2(0,0), new Vector2(0, 1)); // one space downwards
-        b.pushStones(m);
+        assertEquals(2, b.pushStones(m)); // pushes self and 1 stone
         System.out.println("After moving one space down");
         System.out.println(b.toString());
         assertEquals(s1.getId(), b.getStone(new Vector2(0, 1)).getId());
@@ -76,7 +76,7 @@ public class BoardTest {
         System.out.println("Board setup for moving two space down test");
         System.out.println(b.toString());
         m = new Move(new Vector2(0,0), new Vector2(0, 2)); // one space downwards
-        b.pushStones(m);
+        assertEquals(2, b.pushStones(m)); // pushes self and 1 stone
         System.out.println("After moving two spaces down");
         System.out.println(b.toString());
         assertEquals(s1.getId(), b.getStone(new Vector2(0, 2)).getId());
@@ -93,7 +93,7 @@ public class BoardTest {
         System.out.println("Board setup for moving one space diagonal test");
         System.out.println(b.toString());
         m = new Move(new Vector2(0,0), new Vector2(1, 1)); // one space downwards
-        b.pushStones(m);
+        assertEquals(2, b.pushStones(m));
         System.out.println("After moving one space diagonal");
         System.out.println(b.toString());
         assertEquals(s1.getId(), b.getStone(new Vector2(1, 1)).getId());
@@ -112,7 +112,7 @@ public class BoardTest {
         System.out.println("Board setup for moving two stones one space diagonal test");
         System.out.println(b.toString());
         m = new Move(new Vector2(0,0), new Vector2(1, 1)); // one space downwards
-        b.pushStones(m);
+        assertEquals(3, b.pushStones(m));
         System.out.println("After moving two stones diagonal one space");
         System.out.println(b.toString());
         assertEquals(s1.getId(), b.getStone(new Vector2(1, 1)).getId());
@@ -130,7 +130,7 @@ public class BoardTest {
         System.out.println("Board setup for pushing one stone off board test");
         System.out.println(b.toString());
         m = new Move(new Vector2(1,0), new Vector2(-1, 0)); // one space downwards
-        b.pushStones(m);
+        assertEquals(2, b.pushStones(m));
         System.out.println("After pushing one stone off board");
         System.out.println(b.toString());
         assertEquals(s1.getId(), b.getStone(new Vector2(0, 0)).getId());
@@ -148,7 +148,7 @@ public class BoardTest {
         System.out.println("Board setup for moving two stones two space diagonal test");
         System.out.println(b.toString());
         m = new Move(new Vector2(1,1), new Vector2(2, 2)); // one space downwards
-        b.pushStones(m);
+        assertEquals(3, b.pushStones(m));
         System.out.println("After moving two stones diagonal two space");
         System.out.println(b.toString());
         assertEquals(s1.getId(), b.getStone(new Vector2(3, 3)).getId());

@@ -1,6 +1,9 @@
 package Shobu;
 
+import com.google.gson.stream.JsonReader;
 import org.junit.Test;
+
+import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
@@ -81,6 +84,12 @@ public class GameRulesTest {
                 new Move(new Vector2(0, 3), new Vector2(0,1)) // top left board
         );
         assertTrue( 0 != g.getRules().validateTurn(g, g.getBoard(), t).getErrors().size());
+
+        // This is an example of an illegal move that I pulled from an earlier version. Black pushes a stone through another stone.
+        g = new Game(new GameRules(), Board.fromSerializedString("ooo.oooo.........o......xxxxxxxxooooooo...x....x.....o..xx.xxxx."), Stone.COLOR.BLACK, 2);
+        System.out.println(g.getBoard().toString());
+        Turn blacksTurn = Turn.fromJsonReader(new JsonReader(new StringReader("{\"passive\":{\"origin\": {\"x\": 3, \"y\": 7}, \"heading\": {\"x\": 0, \"y\": -2}}, \"aggressive\": {\"origin\": {\"x\": 5, \"y\": 7}, \"heading\": {\"x\": 0, \"y\": -2}}}")));
+        assertTrue(0 < g.getRules().validateTurn(g, g.getBoard(), blacksTurn).getErrors().size());
     }
 
     @Test
@@ -106,5 +115,4 @@ public class GameRulesTest {
         g = new Game(new GameRules(), b);
         assertEquals(Stone.COLOR.WHITE, g.getRules().getWinner(g, g.getBoard()));
     }
-
 }
