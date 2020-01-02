@@ -77,6 +77,10 @@ public class AIController {
 
             while (objectFinished == false) {
                 byteRead = processOutput.read();
+                if (byteRead == -1) {
+                    // End of input, subprocess probably died.
+                    return null; // no input from subprocess
+                }
                 char asciiCharRead = (char)byteRead;
                 JSON_DELIMITERS delimReceived = matchCurlyBraces(stack, asciiCharRead);
                 if (delimReceived == JSON_DELIMITERS.STARTED_OBJECT) {

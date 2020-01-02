@@ -5,6 +5,9 @@ package Shobu;
 
 import com.google.gson.stream.JsonReader;
 import org.junit.Test;
+
+import java.io.StringReader;
+
 import static org.junit.Assert.*;
 
 public class AppTest {
@@ -12,15 +15,24 @@ public class AppTest {
     public void testIsTurnPayload() {
         String turnPayload = "{\"type\":\"turn\", \"payload\":{}}";
         String notTurnPayload = "{\"something\":\"else\"}";
-        assertTrue(App.isTurnPayload(turnPayload));
-        assertFalse(App.isTurnPayload(notTurnPayload));
+        assertTrue(Utilities.isTurnPayload(turnPayload));
+        assertFalse(Utilities.isTurnPayload(notTurnPayload));
     }
 
     @Test
     public void testUnwrapTurnPayload() {
         String turnMessage = "{ \"type\":\"turn\", \"payload\": {\"passive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} }, \"aggressive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} } } }";
-        JsonReader reader = App.unwrapTurnJsonObject(turnMessage);
+        JsonReader reader = Utilities.unwrapTurnJsonObject(turnMessage);
         Turn t = Turn.fromJsonReader(reader);
         assertNotNull(t);
+    }
+
+    @Test
+    public void testJsonPassThrough() {
+        Game g = new Game(new GameRules(), new Board(true));
+        String gameStateJson = g.toJson();
+        Turn turn = Turn.fromJsonReader(new JsonReader(new StringReader("{\"passive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} }, \"aggressive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} } }")));
+        String inJson = "{ \"gamestate\": " + gameStateJson + ", \"turn\": " + turn.toJson() + "}";
+        System.out.println(inJson);
     }
 }

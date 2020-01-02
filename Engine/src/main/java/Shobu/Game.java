@@ -1,5 +1,10 @@
 package Shobu;
 
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+
+import java.io.IOException;
+
 public class Game {
     private Stone.COLOR whosTurnIsIt;
     private int turnNumber;
@@ -72,6 +77,49 @@ public class Game {
     }
 
     public String toJson() {
-        return "{\"type\":\"gamestate\", \"payload\": { \"board\": \"" + this.board.toSerializedString() + "\", \"turn\": \"" + this.getWhosTurnItIs().toString() + "\", \"turnNumber\": " + Integer.toString(this.getTurnNumber()) + "}}";
+        return "{ \"board\": \"" + this.board.toSerializedString() + "\", \"turn\": \"" + this.getWhosTurnItIs().toString() + "\", \"turnNumber\": " + Integer.toString(this.getTurnNumber()) + "}";
+    }
+
+    public static Game fromJsonReader(JsonReader jsonReader, GameRules rules) {
+        String boardSerialized = null;
+        Stone.COLOR turn = null;
+        int turnNumber = 0;
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if (nextToken != JsonToken.BEGIN_OBJECT) { return null; } // invalid!
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                nextToken = jsonReader.peek();
+                if (nextToken == JsonToken.NAME) {
+                    String name = jsonReader.nextName();
+                    if (name.equals("board")) {
+                        boardSerialized = jsonReader.nextString();
+                        if (boardSerialized == null || boardSerialized.length() != 64) { return null; }
+                    } else if (name.equals("turn")) {
+                        String colorName = jsonReader.nextString();
+                        if (colorName.equals(Stone.COLOR.BLACK.toString())) {
+                            turn = Stone.COLOR.BLACK;
+                        } else if (colorName.equals((Stone.COLOR.WHITE.toString()))) {
+                            turn = Stone.COLOR.WHITE;
+                        } else {
+                            return null;
+                        }
+                    } else if (name.equals("turnNumber")){
+                        turnNumber = jsonReader.nextInt();
+                        if (turnNumber < 0) { return null; }
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+            jsonReader.endObject();
+
+            if (boardSerialized == null || turn == null || turnNumber < 0) { return null; }
+            return new Game(rules, Board.fromSerializedString(boardSerialized), turn, turnNumber);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

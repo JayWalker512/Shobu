@@ -1,0 +1,29 @@
+{
+  "turn": {
+    "passive": {
+      "origin": {
+        "x": 6,
+        "y": 7
+      },
+      "heading": {
+        "x": 0,
+        "y": -1
+      }
+    },
+    "aggressive": {
+      "origin": {
+        "x": 3,
+        "y": 3
+      },
+      "heading": {
+        "x": 0,
+        "y": -1
+      }
+    }
+  },
+  "gamestate": {
+    "board": "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
+    "turn": "BLACK",
+    "turnNumber": 0
+  }
+}

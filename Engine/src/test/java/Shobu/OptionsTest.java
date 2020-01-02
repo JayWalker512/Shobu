@@ -20,5 +20,11 @@ public class OptionsTest {
         for (String e : Arrays.asList(extensions)) {
             assertTrue(opts.getExtensions().indexOf(e) != -1);
         }
+
+        // Test json pass through option
+        String[] args2 = {"--json-pass-through"};
+        opts = new Options(args2);
+        assertTrue(opts.isValid());
+        assertTrue(opts.jsonPassThrough());
     }
 }

@@ -85,6 +85,50 @@ to the next line. The example above shows the board in the default start-of-game
 }
 ```
 
+## JSON Pass-through mode
+
+You can use the game engine in JSON pass-through mode where a game state and a turn are provided to the engine
+on standard input. The engine will process the turn based on the game state provided, transition the board and output
+the new game state representation as JSON on standard output. An example of usage follows:
+
+```bash
+cat gamestate-and-turn.json | java -jar Engine.jar --json-pass-through > new-gamestate.json
+``` 
+
+The JSON input used with pass-through mode should be formatted like so:
+
+```json
+{
+  "turn": {
+    "passive": {
+      "origin": {
+        "x": 6,
+        "y": 7
+      },
+      "heading": {
+        "x": 0,
+        "y": -1
+      }
+    },
+    "aggressive": {
+      "origin": {
+        "x": 3,
+        "y": 3
+      },
+      "heading": {
+        "x": 0,
+        "y": -1
+      }
+    }
+  },
+  "gamestate": {
+    "board": "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
+    "turn": "BLACK",
+    "turnNumber": 0
+  }
+}
+```
+
 ## Board layout
 
 The game board is represented as an 8x8 grid with coordinates (0,0) located in the upper

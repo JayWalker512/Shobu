@@ -2,102 +2,11 @@ package AIStarterKit;
 
 import Shobu.*;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 
 import java.io.*;
 import java.util.*;
 
-import static java.util.Random.*;
-
 public class App {
-
-    /** This method reads the output from STDIN until it determines that it has received a complete
-     * JSON object. It does this by matching curly braces { } and with no other method or validation of the JSON
-     * structure. That's up to the caller! It then returns the String containing this object.
-     * @return
-     */
-    public static String getNextJsonFromInputStream(InputStream in) {
-        StringBuilder sb = new StringBuilder();
-        InputStream processOutput = in;
-        int byteRead = 0;
-        try {
-            boolean objectStarted = false;
-            boolean objectFinished = false;
-            Stack<Character> stack = new Stack<>();
-
-            while (objectFinished == false) {
-                byteRead = processOutput.read();
-                // TODO FIXME if the input stream ends, we should exit the program
-                char asciiCharRead = (char)byteRead;
-                AIController.JSON_DELIMITERS delimReceived = AIController.matchCurlyBraces(stack, asciiCharRead);
-                if (delimReceived == AIController.JSON_DELIMITERS.STARTED_OBJECT) {
-                    objectStarted = true;
-                }
-                if (delimReceived == AIController.JSON_DELIMITERS.FINISHED_OBJECT) {
-                    objectFinished = true;
-                }
-                if (objectStarted) {
-                    sb.append(asciiCharRead);
-                }
-            }
-        } catch (Exception e) {
-            return "";
-        }
-        return sb.toString();
-    }
-
-    /**
-     * This method checks if a JSON string provided is A. a JSON object and B. has a property "type" equal
-     * to "turn". That is all, it does not validate if a payload is present or do any other kind of checks.
-     * @param jsonInput
-     * @return true if the json object has "type":"turn", false otherwise.
-     */
-    public static boolean isGameStatePayload(String jsonInput) {
-        JsonReader jsonReader = new JsonReader(new StringReader(jsonInput));
-        try {
-            JsonToken nextToken = jsonReader.peek();
-            if(!JsonToken.BEGIN_OBJECT.equals(nextToken)) { return false; }
-            jsonReader.beginObject();
-            while (jsonReader.hasNext()) {
-                nextToken = jsonReader.peek();
-                if (JsonToken.NAME.equals(nextToken)) {
-                    String name = jsonReader.nextName();
-                    if (name.equals("type")) {
-                        String value = jsonReader.nextString();
-                        if (value.equals("gamestate")) {
-                            return true;
-                        }
-                    }
-                }
-                jsonReader.skipValue();
-            }
-        } catch (IOException e) {
-            return false;
-        }
-        return false;
-    }
-
-    public static JsonReader unwrapGameStateJsonObject(String jsonInput) {
-        JsonReader jsonReader = new JsonReader(new StringReader(jsonInput));
-        try {
-            JsonToken nextToken = jsonReader.peek();
-            if(!JsonToken.BEGIN_OBJECT.equals(nextToken)) { return null; }
-            jsonReader.beginObject();
-            while (jsonReader.hasNext()) {
-                nextToken = jsonReader.peek();
-                if (JsonToken.NAME.equals(nextToken)) {
-                    String name = jsonReader.nextName();
-                    if (name.equals("payload")) {
-                        return jsonReader;
-                    }
-                }
-                jsonReader.skipValue();
-            }
-        } catch (IOException e) {
-            return null;
-        }
-        return null;
-    }
 
     public static List<Vector2> getPossibleHeadings() {
         List<Vector2> headings = new ArrayList<>();
@@ -181,11 +90,23 @@ public class App {
         return Collections.unmodifiableList(legalTurns);
     }
 
+    private static void log(BufferedWriter logWriter, String s) {
+        try {
+            if (logWriter != null) {
+                logWriter.write(s + "\n");
+                logWriter.flush();
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+    }
+
     public static void main(String args[]) {
         System.out.println("AI Starter Kit!");
 
+        // TODO add option for JSON pass-through. Given a GameState, determine and return Turn JSON.
         InputStream in = System.in;
-        if (args.length == 0) {
+        /*if (args.length == 0) {
             in = System.in;
         } else {
             try {
@@ -194,28 +115,53 @@ public class App {
                 System.out.println("Couldn't open file: " + args[0]);
                 return;
             }
+        }*/
+        BufferedWriter logWriter = null;
+        if (args.length == 1) {
+            try {
+                logWriter = new BufferedWriter(new FileWriter(args[0], false));
+            } catch (Exception e) {
+                return;
+            }
         }
 
-        while (true) {
+        boolean canPlay = true;
+        while (canPlay) {
             // Read game state JSON
-            String nextJson = App.getNextJsonFromInputStream(in);
-            if (isGameStatePayload(nextJson)) {
-                JsonReader jsonReader = unwrapGameStateJsonObject(nextJson);
-                GameState g = GameState.fromJsonReader(jsonReader);
+            String nextJson = Utilities.getNextJsonFromInputStream(in);
+            if (Utilities.isGameStatePayload(nextJson)) {
+                JsonReader jsonReader = Utilities.unwrapGameStateJsonObject(nextJson);
+                log(logWriter,"finished unwrapping GameState");
 
                 // GameState object doesn't keep track of rules, so we provide that here.
-                Game shobuGame = new Game(new GameRules(), g.getBoard(), g.getWhosTurnIsIt(), g.getTurnNumber());
+                Game shobuGame = Game.fromJsonReader(jsonReader, new GameRules());
+                log(logWriter,"finished creating Game object from JSON");
 
                 // Enumerate legal Turns
                 List<Turn> legalTurns = enumerateLegalTurns(shobuGame);
-
-                // TODO FIXME it is possible to get to a state where you have 0 legal moves. Need to gracefully quit (lose)
+                log(logWriter,"finished enumerating legal turns.");
 
                 // Choose a Turn to play
-                Turn chosenTurn = legalTurns.get(new Random().nextInt(legalTurns.size()));
+                Turn chosenTurn;
+                if (legalTurns.size() > 0) {
+                    chosenTurn = legalTurns.get(new Random().nextInt(legalTurns.size()));
+                    log(logWriter,"finished choosing a turn to play from legal turns.");
 
-                // Send turn back to Engine as JSON
-                System.out.println("{\"type\": \"turn\", \"payload\": " + chosenTurn.toJson() + "}");
+                    // Send turn back to Engine as JSON
+                    System.out.println("{\"type\": \"turn\", \"payload\": " + chosenTurn.toJson() + "}");
+                    log(logWriter, "Sent to engine: " + "{\"type\": \"turn\", \"payload\": " + chosenTurn.toJson() + "}");
+                } else {
+                    log(logWriter, "Have no legal turns: must abdicate.");
+                    canPlay = false;
+                    return;
+                }
+            }
+        }
+        if (logWriter != null) {
+            try {
+                logWriter.close();
+            } catch (Exception e) {
+                // do nothing
             }
         }
     }

@@ -5,12 +5,16 @@ import java.util.*;
 public class Options {
     private List<String> programNames;
     private List<String> extensions;
+    private boolean jsonPassThrough = false;
+    private boolean isValid = false;
+
+    public boolean jsonPassThrough() {
+        return jsonPassThrough;
+    }
 
     public boolean isValid() {
         return isValid;
     }
-
-    private boolean isValid = false;
 
     public List<String> getProgramNames() {
         return Collections.unmodifiableList(this.programNames);
@@ -27,9 +31,19 @@ public class Options {
     }
 
     Options(String[] args) {
-        if (args.length < 2) {
+        if (args.length < 1) {
             return; // isValid = false;
         }
+
+        if (args.length == 1) {
+            if (args[0].equals("--json-pass-through")) {
+                jsonPassThrough = true;
+                isValid = true;
+                return;
+            }
+        }
+
+        if (args.length != 2) { return; }
 
         List<String> programNames = Arrays.asList(args);
         this.programNames = Collections.unmodifiableList(programNames);

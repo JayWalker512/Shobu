@@ -75,6 +75,21 @@ public class Turn {
     }
 
     public String toJson() {
-        return "{\"passive\":" + passive.toJson() + ", \"aggressive\": " + aggressive.toJson() + "}";
+        if (this.errors.size() == 0) {
+            return "{\"passive\":" + passive.toJson() + ", \"aggressive\": " + aggressive.toJson() + "}";
+        }
+        StringBuilder errorsArray = new StringBuilder();
+        errorsArray.append("[");
+        for (String e : errors) {
+            if (errors.size() > 1) {
+                if (errors.indexOf(e) == errors.size() - 1) {
+                    errorsArray.append("\"" + e + "\"");
+                } else {
+                    errorsArray.append("\"" + e + "\",");
+                }
+            }
+        }
+        errorsArray.append("]");
+        return "{\"passive\":" + passive.toJson() + ", \"aggressive\": " + aggressive.toJson() + ", \"errors\": " + errorsArray.toString() + "}";
     }
 }
