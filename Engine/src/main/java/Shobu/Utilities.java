@@ -71,7 +71,10 @@ public class Utilities {
 
             while (objectFinished == false) {
                 byteRead = processOutput.read();
-                // TODO FIXME if the input stream ends, we should exit the program
+                if (byteRead == -1) {
+                    // End of input, subprocess probably died.
+                    return null; // no input from subprocess
+                }
                 char asciiCharRead = (char)byteRead;
                 AIController.JSON_DELIMITERS delimReceived = AIController.matchCurlyBraces(stack, asciiCharRead);
                 if (delimReceived == AIController.JSON_DELIMITERS.STARTED_OBJECT) {

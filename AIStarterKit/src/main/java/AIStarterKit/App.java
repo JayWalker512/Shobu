@@ -102,9 +102,6 @@ public class App {
     }
 
     public static void main(String args[]) {
-        System.out.println("AI Starter Kit!");
-
-        // TODO add option for JSON pass-through. Given a GameState, determine and return Turn JSON.
         InputStream in = System.in;
         /*if (args.length == 0) {
             in = System.in;
@@ -129,6 +126,10 @@ public class App {
         while (canPlay) {
             // Read game state JSON
             String nextJson = Utilities.getNextJsonFromInputStream(in);
+            if (nextJson == null) { // input stream ended
+                canPlay = false;
+                return;
+            }
             if (Utilities.isGameStatePayload(nextJson)) {
                 JsonReader jsonReader = Utilities.unwrapGameStateJsonObject(nextJson);
                 log(logWriter,"finished unwrapping GameState");
