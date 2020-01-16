@@ -34,7 +34,6 @@ public class App {
         List<Stone> stonesOnOtherColorBoard = new ArrayList<>();
         int originalQuadrant = board.getQuadrant(origin);
         for (Stone s : board.getStones()) {
-            if (s == null) { continue; }
             Vector2 stoneLocation = board.getStoneLocation(s.getId());
             int stoneQuadrant = board.getQuadrant(stoneLocation);
             if (originalQuadrant == 0 || originalQuadrant == 2) {

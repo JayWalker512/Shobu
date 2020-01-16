@@ -172,7 +172,6 @@ public class Board {
     public List<Stone> getStonesOfColorOnHomeBoard(Stone.COLOR whosHomeBoard) {
         List<Stone> stonesOfColorOnHomeBoard = new ArrayList<>();
         for (Stone s : getStones()) {
-            if (s == null) { continue; }
             if (s.getColor() != whosHomeBoard) { continue; }
             int quadrant = getQuadrant(getStoneLocation(s.getId()));
             if (whosHomeBoard == Stone.COLOR.BLACK) {
