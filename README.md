@@ -85,6 +85,9 @@ to the next line. The example above shows the board in the default start-of-game
 }
 ```
 
+This model of communication between processes and segregation of AI from the game engine was inspired
+by the [Halite](https://github.com/HaliteChallenge/Halite-III) engine, which works effectively the same way. 
+
 ## JSON Pass-through mode
 
 You can use the game engine in JSON pass-through mode where a game state and a turn are provided to the engine
@@ -133,3 +136,8 @@ The JSON input used with pass-through mode should be formatted like so:
 
 The game board is represented as an 8x8 grid with coordinates (0,0) located in the upper
 leftmost space and (7,7) in the lower rightmost space.
+
+## TODO
+
+* Make the Engine output easily parsable by an analysis tool (eg, output JSON representing sequence of gamestates & moves)
+* (Maybe) Make the communication between Engine and AI a well-formed JSON array instead of just a sequence of objects. TBD if this is necessary.

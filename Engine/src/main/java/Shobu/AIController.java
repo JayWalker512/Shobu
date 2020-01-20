@@ -1,5 +1,7 @@
 package Shobu;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
@@ -27,8 +29,8 @@ public class AIController {
             try {
                 Process p = pb.start();
                 subprocesses.add(p);
-                subprocessInput.add(p.getOutputStream());
-                subprocessOutput.add(p.getInputStream());
+                subprocessInput.add(new BufferedOutputStream(p.getOutputStream()));
+                subprocessOutput.add(new BufferedInputStream(p.getInputStream()));
             } catch (Exception e) {
                 this.errors.add("Couldn't start subprocess " + programName + "! " + e.getMessage());
             }

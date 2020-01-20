@@ -101,7 +101,7 @@ public class App {
     }
 
     public static void main(String args[]) {
-        InputStream in = System.in;
+        InputStream in = new BufferedInputStream(System.in);
         /*if (args.length == 0) {
             in = System.in;
         } else {

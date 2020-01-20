@@ -6,6 +6,7 @@ package Shobu;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -56,7 +57,7 @@ public class App {
     }
 
     private static void jsonPassThrough() {
-        InputStream inputStream = System.in;
+        InputStream inputStream = new BufferedInputStream(System.in);
         String nextJson = Utilities.getNextJsonFromInputStream(inputStream);
         GameAndTurn gameAndTurn = GameAndTurn.fromJsonReader(new JsonReader(new StringReader(nextJson)));
         if (false == gameAndTurn.isValid()) {
@@ -93,7 +94,6 @@ public class App {
         }
 
         System.out.println("Arguments: " + Arrays.asList(args));
-        ListIterator<String> argListIter = Arrays.asList(args).listIterator();
 
         // Determine method to execute AI subprocesses (java, python3, etc)
         // Start subprocesses and open IO pipes to them
