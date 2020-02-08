@@ -93,7 +93,7 @@ public class App {
             return;
         }
 
-        System.out.println("Arguments: " + Arrays.asList(args));
+        //System.out.println("Arguments: " + Arrays.asList(args));
 
         // Determine method to execute AI subprocesses (java, python3, etc)
         // Start subprocesses and open IO pipes to them
@@ -111,9 +111,17 @@ public class App {
         colorToProcessMap.put(Stone.COLOR.BLACK, 0);
         colorToProcessMap.put(Stone.COLOR.WHITE, 1);
 
+        // List of JSON representations of game states/turns
+        List<String> gameStatesJSON = new ArrayList<>();
+        List<String> turnsJSON = new ArrayList<>();
+        String winnerName = "";
+
         try {
             while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null && shobuGame.getTurnNumber() < 1000) {
-                System.out.println(shobuGame.getWhosTurnItIs().toString() + " player's turn (" + shobuGame.getTurnNumber() + ")");
+                // TODO output the new game state JSON here
+                gameStatesJSON.add(shobuGame.toJson());
+
+                //System.out.println(shobuGame.getWhosTurnItIs().toString() + " player's turn (" + shobuGame.getTurnNumber() + ")");
 
                 // Send gamestate JSON to AI whos turn it is
                 aiController.sendStringToSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()), Utilities.wrapJsonWithContainer("gamestate", shobuGame.toJson()));
@@ -121,7 +129,7 @@ public class App {
                 // Get their turn response (TODO this needs a timeout to die if there's a problem)
                 String turnJson = aiController.getNextJsonFromSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()));
                 if (turnJson == null) {
-                    System.out.println("Subprocess died. Ending game.");
+                    //System.out.println("Subprocess died. Ending game.");
                     aiController.killSubprocesses();
                     return;
                 }
@@ -133,26 +141,57 @@ public class App {
                     Turn validatedTurn = shobuGame.getRules().validateTurn(shobuGame, shobuGame.getBoard(), aiTurn);
                     if (validatedTurn.getErrors().size() != 0) {
                         for (String e : validatedTurn.getErrors()) {
-                            System.out.println(e);
+                            //System.out.println(e);
                         }
                     } else { // Turn was valid, advance the game state
-                        System.out.println(shobuGame.getWhosTurnItIs().toString() + " plays " + validatedTurn.toString());
+                        // TODO output JSON turn here
+                        turnsJSON.add(validatedTurn.toJson());
+
+                        //System.out.println(shobuGame.getWhosTurnItIs().toString() + " plays " + validatedTurn.toString());
                         shobuGame.takeTurn(validatedTurn);
-                        System.out.println(shobuGame.getBoard().toString());
+                        //System.out.println(shobuGame.getBoard().toString());
                     }
                 }
             }
             if (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null) {
-                System.out.println("Winner is: NONE");
+                //System.out.println("Winner is: NONE");
             } else {
-                System.out.println("Winner is: " + shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).toString());
+                // TODO output JSON winner here
+                winnerName = shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).toString();
+                //System.out.println("Winner is: " + winnerName);
             }
         } catch (Exception e) {
             // Kill subprocesses
             aiController.killSubprocesses();
-            System.out.println("The Shobu game engine encountered an error: " + e.toString() + "\n" + "Error message: " + e.getMessage() + "\n");
+            System.err.println("The Shobu game engine encountered an error: " + e.toString() + "\n" + "Error message: " + e.getMessage() + "\n");
             throw e; // just so we can see the stack trace.
         }
         aiController.killSubprocesses();
+
+        outputGameDataAsJSON(gameStatesJSON, turnsJSON, winnerName);
+    }
+
+    private static void outputGameDataAsJSON(List<String> gameStates, List<String> turns, String winnerName) {
+        System.out.print("{\"game_states\": [");
+        ListIterator<String> stateIter = gameStates.listIterator();
+        while (stateIter.hasNext()) {
+            if (stateIter.nextIndex() != gameStates.size() - 1) {
+                System.out.print(stateIter.next() + ",");
+            } else {
+                System.out.print(stateIter.next() + "],");
+            }
+        }
+
+        System.out.print("\"turns\": [");
+        ListIterator<String> turnIter = turns.listIterator();
+        while (turnIter.hasNext()) {
+            if (turnIter.nextIndex() != turns.size() - 1) {
+                System.out.print(turnIter.next() + ",");
+            } else {
+                System.out.print(turnIter.next() + "],");
+            }
+        }
+
+        System.out.print("\"winner\": \"" + winnerName + "\"}");
     }
 }
