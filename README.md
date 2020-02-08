@@ -41,7 +41,7 @@ state and responding with a JSON representation of their intended move. Two exam
 
 ```json
 {
-  "type": "gamestate",
+  "type": "game_state",
   "payload": {
     "board": "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
     "turn": "BLACK",
@@ -87,6 +87,79 @@ to the next line. The example above shows the board in the default start-of-game
 
 This model of communication between processes and segregation of AI from the game engine was inspired
 by the [Halite](https://github.com/HaliteChallenge/Halite-III) engine, which works effectively the same way. 
+
+## Game logging
+
+The Shobu game engine outputs a JSON representation of the entire game that was played when it ends. 
+The format of this game output is like so (abbreviated repeating structures with ellipses): 
+
+```json
+{
+   "winner" : "BLACK",
+   "turns" : [
+      {
+         "passive" : {
+            "origin" : {
+               "x" : 1,
+               "y" : 7
+            },
+            "heading" : {
+               "x" : 1,
+               "y" : -1
+            }
+         },
+         "aggressive" : {
+            "origin" : {
+               "x" : 6,
+               "y" : 7
+            },
+            "heading" : {
+               "x" : 1,
+               "y" : -1
+            }
+         }
+      },
+      ...
+      {
+         "passive" : {
+            "origin" : {
+               "y" : 6,
+               "x" : 2
+            },
+            "heading" : {
+               "y" : -1,
+               "x" : -1
+            }
+         },
+         "aggressive" : {
+            "origin" : {
+               "y" : 5,
+               "x" : 5
+            },
+            "heading" : {
+               "x" : -1,
+               "y" : -1
+            }
+         }
+      }
+   ],
+   "game_states" : [
+      {
+         "turn" : "BLACK",
+         "board" : "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
+         "turnNumber" : 0
+      },
+      ...
+      {
+        "turn" : "BLACK",
+         "board" : "o.....ooo.o.o.....o.....xxxx.ox...o.o.....x..x...xx...x......x..",
+         "turnNumber" : 58
+      }
+   ]
+}
+
+```
+
 
 ## JSON Pass-through mode
 

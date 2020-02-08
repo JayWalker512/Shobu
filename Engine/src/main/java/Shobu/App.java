@@ -38,7 +38,7 @@ public class App {
                     if (nextToken == JsonToken.NAME) {
                         String name  =  jsonReader.nextName();
 
-                        if (name.equals("gamestate")) {
+                        if (name.equals("game_state")) {
                             gameAndTurn.game = Game.fromJsonReader(jsonReader, new GameRules());
                         } else if (name.equals("turn")) {
                             gameAndTurn.turn = Turn.fromJsonReader(jsonReader);
@@ -124,7 +124,7 @@ public class App {
                 //System.out.println(shobuGame.getWhosTurnItIs().toString() + " player's turn (" + shobuGame.getTurnNumber() + ")");
 
                 // Send gamestate JSON to AI whos turn it is
-                aiController.sendStringToSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()), Utilities.wrapJsonWithContainer("gamestate", shobuGame.toJson()));
+                aiController.sendStringToSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()), Utilities.wrapJsonWithContainer("game_state", shobuGame.toJson()));
 
                 // Get their turn response (TODO this needs a timeout to die if there's a problem)
                 String turnJson = aiController.getNextJsonFromSubprocess(colorToProcessMap.get(shobuGame.getWhosTurnItIs()));

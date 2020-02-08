@@ -21,7 +21,7 @@
       }
     }
   },
-  "gamestate": {
+  "game_state": {
     "board": "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
     "turn": "BLACK",
     "turnNumber": 0

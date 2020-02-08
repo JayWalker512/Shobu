@@ -32,7 +32,7 @@ public class AppTest {
         Game g = new Game(new GameRules(), new Board(true));
         String gameStateJson = g.toJson();
         Turn turn = Turn.fromJsonReader(new JsonReader(new StringReader("{\"passive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} }, \"aggressive\": {\"origin\": {\"x\":1, \"y\":2}, \"heading\": {\"x\":1, \"y\":2} } }")));
-        String inJson = "{ \"gamestate\": " + gameStateJson + ", \"turn\": " + turn.toJson() + "}";
+        String inJson = "{ \"game_state\": " + gameStateJson + ", \"turn\": " + turn.toJson() + "}";
         System.out.println(inJson);
     }
 }

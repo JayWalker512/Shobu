@@ -4,8 +4,8 @@
 
 # first test
 java -jar Engine/build/libs/Engine.jar "cat Engine/src/test/resources/black0.txt" "cat Engine/src/test/resources/white1.txt" | tee "engine.out"
-winner=$(tail -n 1 "engine.out")
-if [[ "Winner is: WHITE" == "$winner" ]]; then
+grep "\"winner\": \"WHITE\"" "engine.out"
+if [[ $? -eq 0 ]]; then
   echo "Integration test succeeded!"
 else
   echo "Integration test failed."
