@@ -111,7 +111,7 @@ public class Utilities {
                     String name = jsonReader.nextName();
                     if (name.equals("type")) {
                         String value = jsonReader.nextString();
-                        if (value.equals("gamestate")) {
+                        if (value.equals("game_state")) {
                             return true;
                         }
                     }
