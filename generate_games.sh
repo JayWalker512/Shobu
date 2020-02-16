@@ -9,6 +9,6 @@ while [ 1 ]; do
     checksum=${checksum:0:64}
     echo "$json" > games/"$checksum.json"
     echo "Game $cnt saved."
+    let cnt+=1;
   fi
-  let cnt+=1;
 done

@@ -116,8 +116,10 @@ public class App {
         List<String> turnsJSON = new ArrayList<>();
         String winnerName = "";
 
+        int turnLimit = 60;
+
         try {
-            while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null && shobuGame.getTurnNumber() < 1000) {
+            while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null && shobuGame.getTurnNumber() < turnLimit) {
                 // TODO output the new game state JSON here
                 gameStatesJSON.add(shobuGame.toJson());
 

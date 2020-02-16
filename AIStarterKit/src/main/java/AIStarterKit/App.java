@@ -109,7 +109,7 @@ public class App {
     public static void main(String args[]) {
 
         // Initialize constants
-        allPossibleHeadings = Collections.unmodifiableList(getPossibleHeadings());
+        allPossibleHeadings = getPossibleHeadings();
 
         InputStream in = new BufferedInputStream(System.in);
         /*if (args.length == 0) {
