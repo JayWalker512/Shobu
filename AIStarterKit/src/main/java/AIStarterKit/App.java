@@ -8,26 +8,32 @@ import java.util.*;
 
 public class App {
 
-    public static List<Vector2> getPossibleHeadings() {
-        List<Vector2> headings = new ArrayList<>();
-        headings.add(new Vector2(-2, -2)); // up left
-        headings.add(new Vector2(0, -2)); // up
-        headings.add(new Vector2(2, -2)); // up right
-        headings.add(new Vector2(-2, 0)); // left
-        headings.add(new Vector2(2, 0)); // right
-        headings.add(new Vector2(-2, 2)); // down left
-        headings.add(new Vector2(0, 2)); // down
-        headings.add(new Vector2(2, 2)); // down right
+    // Initialized in the main() method.
+    static List<Vector2> allPossibleHeadings = null;
 
-        headings.add(new Vector2(-1, -1)); // up left
-        headings.add(new Vector2(0, -1)); // up
-        headings.add(new Vector2(1, -1)); // up right
-        headings.add(new Vector2(-1, 0)); // left
-        headings.add(new Vector2(1, 0)); // right
-        headings.add(new Vector2(-1, 1)); // down left
-        headings.add(new Vector2(0, 1)); // down
-        headings.add(new Vector2(1, 1)); // down right
-        return Collections.unmodifiableList(headings);
+    public static List<Vector2> getPossibleHeadings() {
+        if (allPossibleHeadings == null) {
+            List<Vector2> headings = new ArrayList<>();
+            headings.add(new Vector2(-2, -2)); // up left
+            headings.add(new Vector2(0, -2)); // up
+            headings.add(new Vector2(2, -2)); // up right
+            headings.add(new Vector2(-2, 0)); // left
+            headings.add(new Vector2(2, 0)); // right
+            headings.add(new Vector2(-2, 2)); // down left
+            headings.add(new Vector2(0, 2)); // down
+            headings.add(new Vector2(2, 2)); // down right
+
+            headings.add(new Vector2(-1, -1)); // up left
+            headings.add(new Vector2(0, -1)); // up
+            headings.add(new Vector2(1, -1)); // up right
+            headings.add(new Vector2(-1, 0)); // left
+            headings.add(new Vector2(1, 0)); // right
+            headings.add(new Vector2(-1, 1)); // down left
+            headings.add(new Vector2(0, 1)); // down
+            headings.add(new Vector2(1, 1)); // down right
+            return Collections.unmodifiableList(headings);
+        }
+        return allPossibleHeadings;
     }
 
     public static List<Stone> getStonesOfColorOnOtherColorBoards(Board board, Stone.COLOR myColor, Vector2 origin) {
@@ -101,6 +107,10 @@ public class App {
     }
 
     public static void main(String args[]) {
+
+        // Initialize constants
+        allPossibleHeadings = Collections.unmodifiableList(getPossibleHeadings());
+
         InputStream in = new BufferedInputStream(System.in);
         /*if (args.length == 0) {
             in = System.in;
