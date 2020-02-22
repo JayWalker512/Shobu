@@ -156,21 +156,20 @@ public class App {
                 }
             }
             if (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null) {
+                winnerName = "NONE";
                 //System.out.println("Winner is: NONE");
             } else {
-                // TODO output JSON winner here
                 winnerName = shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).toString();
                 //System.out.println("Winner is: " + winnerName);
             }
+            outputGameDataAsJSON(gameStatesJSON, turnsJSON, winnerName);
+            aiController.killSubprocesses();
         } catch (Exception e) {
             // Kill subprocesses
             aiController.killSubprocesses();
             System.err.println("The Shobu game engine encountered an error: " + e.toString() + "\n" + "Error message: " + e.getMessage() + "\n");
             throw e; // just so we can see the stack trace.
         }
-        aiController.killSubprocesses();
-
-        outputGameDataAsJSON(gameStatesJSON, turnsJSON, winnerName);
     }
 
     private static void outputGameDataAsJSON(List<String> gameStates, List<String> turns, String winnerName) {
