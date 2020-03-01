@@ -197,7 +197,7 @@ The JSON input used with pass-through mode should be formatted like so:
       }
     }
   },
-  "gamestate": {
+  "game_state": {
     "board": "oooooooo................xxxxxxxxoooooooo................xxxxxxxx",
     "turn": "BLACK",
     "turnNumber": 0

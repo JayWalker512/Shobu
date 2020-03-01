@@ -56,6 +56,7 @@ public class App {
         }
     }
 
+
     private static void jsonPassThrough() {
         InputStream inputStream = new BufferedInputStream(System.in);
         String nextJson = Utilities.getNextJsonFromInputStream(inputStream);
