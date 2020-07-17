@@ -212,5 +212,4 @@ leftmost space and (7,7) in the lower rightmost space.
 
 ## TODO
 
-* Make the Engine output easily parsable by an analysis tool (eg, output JSON representing sequence of gamestates & moves)
 * (Maybe) Make the communication between Engine and AI a well-formed JSON array instead of just a sequence of objects. TBD if this is necessary.
