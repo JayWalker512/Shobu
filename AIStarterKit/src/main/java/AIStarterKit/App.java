@@ -95,6 +95,17 @@ public class App {
         return Collections.unmodifiableList(legalTurns);
     }
 
+    public static long calculateHeuristicBoardValueForColor(Board board, Stone.COLOR color) {
+        long whiteStones = board.getStones().stream().filter((s) -> {
+            return (s.getColor() == Stone.COLOR.WHITE);
+        }).count();
+        long blackStones = board.getStones().stream().filter((s) -> {
+            return (s.getColor() == Stone.COLOR.BLACK);
+        }).count();
+        long valueForBlack = blackStones - whiteStones;
+        return (color == Stone.COLOR.BLACK ? valueForBlack : -valueForBlack);
+    }
+
     private static void log(BufferedWriter logWriter, String s) {
         try {
             if (logWriter != null) {
@@ -153,8 +164,15 @@ public class App {
 
                 // Choose a Turn to play
                 Turn chosenTurn;
+                long maxValue = -Long.MAX_VALUE;
                 if (legalTurns.size() > 0) {
-                    chosenTurn = legalTurns.get(new Random().nextInt(legalTurns.size()));
+                    chosenTurn = legalTurns.get(new Random().nextInt(legalTurns.size())); // to ensure it's set
+                    for (Turn turn : legalTurns) {
+                        Game tempGame = new Game(shobuGame);
+                        tempGame.takeTurn(turn);
+                        long value = calculateHeuristicBoardValueForColor(tempGame.getBoard(), shobuGame.getWhosTurnItIs());
+                        if (value >= maxValue) { chosenTurn = turn; }
+                    };
                     log(logWriter,"finished choosing a turn to play from legal turns.");
 
                     // Send turn back to Engine as JSON

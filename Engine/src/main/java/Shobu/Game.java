@@ -42,6 +42,13 @@ public class Game {
         this.board = new Board(board);
     }
 
+    public Game(Game game) {
+        this.whosTurnIsIt = game.getWhosTurnItIs();
+        this.turnNumber = game.getTurnNumber();
+        this.rules = new GameRules(game.getRules());
+        this.board = new Board(game.getBoard());
+    }
+
     public Stone.COLOR getWhosTurnItIs() {
         return whosTurnIsIt;
     }
