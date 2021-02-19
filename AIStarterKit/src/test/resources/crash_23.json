@@ -1,0 +1,8 @@
+{
+  "type": "game_state",
+  "payload": {
+    "board" : "...o...o..ox.oox......o.xxoox.xx.ooo...oo.xxx....x...xoo...x...x",
+    "turn" : "WHITE",
+    "turnNumber" : 23
+  }
+}
