@@ -3,6 +3,7 @@ package Shobu;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class GameRules {
 
@@ -136,7 +137,7 @@ public class GameRules {
      * @param board
      * @return
      */
-    public Stone.COLOR getWinner(Game game, Board board) {
+    public Optional<Stone.COLOR> getWinner(Game game, Board board) {
         Map<Integer, Map<Stone.COLOR, Integer>> mapOfQuadrantsToStoneCountsByColor = new HashMap<>();
         for (int i = 0; i < 4; i++) {
             mapOfQuadrantsToStoneCountsByColor.put(i, new HashMap<Stone.COLOR, Integer>());
@@ -156,14 +157,14 @@ public class GameRules {
             for (Stone.COLOR c : Stone.COLOR.values()) {
                 if (mapOfQuadrantsToStoneCountsByColor.get(i).get(c) == null) {
                     if (c == Stone.COLOR.BLACK) { // there are no black stones in this quadrant, so white wins.
-                        return Stone.COLOR.WHITE;
+                        return Optional.of(Stone.COLOR.WHITE);
                     }
-                    return Stone.COLOR.BLACK;
+                    return Optional.of(Stone.COLOR.BLACK);
                 }
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -14,6 +15,9 @@ import java.util.Stack;
  * Class for misc methods that don't necessarily fit nicely into another class. Can be refactored later.
  */
 public class Utilities {
+
+    // This value is assigned the first time getPossibleHeadings() is called.
+    private static List<Vector2> allPossibleHeadings = null;
 
     static int clamp(int v, int min, int max) {
         return Math.max(min, Math.min(max, v));
@@ -175,6 +179,50 @@ public class Utilities {
             return false;
         }
         return false;
+    }
+
+    public static List<Stone> getStonesOfColorOnOtherColorBoards(Board board, Stone.COLOR myColor, Vector2 origin) {
+        List<Stone> stonesOnOtherColorBoard = new ArrayList<>();
+        int originalQuadrant = board.getQuadrant(origin);
+        for (Stone s : board.getStones()) {
+            Vector2 stoneLocation = board.getStoneLocation(s.getId());
+            int stoneQuadrant = board.getQuadrant(stoneLocation);
+            if (originalQuadrant == 0 || originalQuadrant == 2) {
+                if (stoneQuadrant == 1 || stoneQuadrant == 3) {
+                    stonesOnOtherColorBoard.add(s);
+                }
+            } else if (originalQuadrant == 1 || originalQuadrant == 3) {
+                if (stoneQuadrant == 0 || stoneQuadrant == 2) {
+                    stonesOnOtherColorBoard.add(s);
+                }
+            }
+        }
+        return stonesOnOtherColorBoard;
+    }
+
+    public static List<Vector2> getPossibleHeadings() {
+        if (allPossibleHeadings == null) {
+            List<Vector2> headings = new ArrayList<>();
+            headings.add(new Vector2(-2, -2)); // up left
+            headings.add(new Vector2(0, -2)); // up
+            headings.add(new Vector2(2, -2)); // up right
+            headings.add(new Vector2(-2, 0)); // left
+            headings.add(new Vector2(2, 0)); // right
+            headings.add(new Vector2(-2, 2)); // down left
+            headings.add(new Vector2(0, 2)); // down
+            headings.add(new Vector2(2, 2)); // down right
+
+            headings.add(new Vector2(-1, -1)); // up left
+            headings.add(new Vector2(0, -1)); // up
+            headings.add(new Vector2(1, -1)); // up right
+            headings.add(new Vector2(-1, 0)); // left
+            headings.add(new Vector2(1, 0)); // right
+            headings.add(new Vector2(-1, 1)); // down left
+            headings.add(new Vector2(0, 1)); // down
+            headings.add(new Vector2(1, 1)); // down right
+            return Collections.unmodifiableList(headings);
+        }
+        return allPossibleHeadings;
     }
 
     public static String wrapJsonWithContainer(String type, String jsonPayload) {

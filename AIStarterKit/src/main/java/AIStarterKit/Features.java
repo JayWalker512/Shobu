@@ -5,6 +5,10 @@ import Shobu.Vector2;
 
 import java.awt.*;
 
+/**
+ * This class provides a series of methods to calculate various scalar "features" that would be useful as input to
+ * an ML algorithm, or heuristic based strategy.
+ */
 public class Features {
 
     // TODO add number of ways stone at (x,y) can be pushed off

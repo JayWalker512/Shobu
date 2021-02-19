@@ -4,6 +4,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Game {
     private Stone.COLOR whosTurnIsIt;
@@ -81,6 +84,49 @@ public class Game {
         };
 
         this.whosTurnIsIt = Stone.COLOR.BLACK;
+    }
+
+    public List<Turn> enumerateLegalTurns() {
+        Board board = this.getBoard();
+        Stone.COLOR whosTurnItIs = this.getWhosTurnItIs();
+        // Enumerate possible headings (from function)
+        List<Vector2> possibleHeadings = Utilities.getPossibleHeadings();
+
+        // For each own stone in home board (passive):
+        List<Stone> ownStonesOnHomeBoard = board.getStonesOfColorOnHomeBoard(whosTurnItIs);
+        List<Move> possiblePassiveMoves = new ArrayList<>();
+        for (Stone s : ownStonesOnHomeBoard) {
+            // Make a Move() for each possible heading
+            for (Vector2 heading : possibleHeadings) {
+                possiblePassiveMoves.add(new Move(board.getStoneLocation(s.getId()), heading));
+            }
+        }
+
+        // For possible (passive) move on home board stones:
+        List<Turn> possibleTurns = new ArrayList<>();
+        for (Move m : possiblePassiveMoves) {
+            // For each own stone on other color board:
+
+            // TODO does this method even need to be in here?
+            List<Stone> validAggressiveStones = Utilities.getStonesOfColorOnOtherColorBoards(board, whosTurnItIs, m.getOrigin());
+            for (Stone s : validAggressiveStones) {
+                // Make a Turn() pairing possible passive move with matching active move origin+heading
+                possibleTurns.add(new Turn(m, new Move(board.getStoneLocation(s.getId()), m.getHeading())));
+            }
+        }
+
+        // For each potentially possible Turn that's been created:
+        List<Turn> legalTurns = new ArrayList<>();
+        for (Turn t : possibleTurns) {
+            // Validate turns and add them to a list of legal turns
+            if (this.getRules().validateTurn(this, board, t).getErrors().size() == 0) {
+                legalTurns.add(t);
+            }
+        }
+
+        // Return list of legal turns
+        return Collections.unmodifiableList(legalTurns);
+
     }
 
     public String toJson() {

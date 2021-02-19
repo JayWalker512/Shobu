@@ -117,10 +117,10 @@ public class App {
         List<String> turnsJSON = new ArrayList<>();
         String winnerName = "";
 
-        int turnLimit = 60;
+        int turnLimit = 500;
 
         try {
-            while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null && shobuGame.getTurnNumber() < turnLimit) {
+            while (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).isPresent() == false && shobuGame.getTurnNumber() < turnLimit) {
                 // TODO output the new game state JSON here
                 gameStatesJSON.add(shobuGame.toJson());
 
@@ -156,11 +156,11 @@ public class App {
                     }
                 }
             }
-            if (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()) == null) {
+            if (shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).isPresent() == false) {
                 winnerName = "NONE";
                 //System.out.println("Winner is: NONE");
             } else {
-                winnerName = shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).toString();
+                winnerName = shobuGame.getRules().getWinner(shobuGame, shobuGame.getBoard()).get().toString();
                 //System.out.println("Winner is: " + winnerName);
             }
             outputGameDataAsJSON(gameStatesJSON, turnsJSON, winnerName);

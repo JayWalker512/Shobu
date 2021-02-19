@@ -95,7 +95,7 @@ public class GameRulesTest {
     @Test
     public void testWinner() {
         Game g = new Game(new GameRules(), new Board(true));
-        assertNull(g.getRules().getWinner(g, g.getBoard())); // no winner at the start
+        assertTrue(g.getRules().getWinner(g, g.getBoard()).isPresent() == false); // no winner at the start
 
         // Remove all the white pieces in quadrant 0
         Board b = new Board(true);
@@ -104,7 +104,7 @@ public class GameRulesTest {
         b.setStone(new Vector2(2,0), null);
         b.setStone(new Vector2(3,0), null);
         g = new Game(new GameRules(), b);
-        assertEquals(Stone.COLOR.BLACK, g.getRules().getWinner(g, g.getBoard()));
+        assertEquals(Stone.COLOR.BLACK, g.getRules().getWinner(g, g.getBoard()).get());
 
         // Remove all the black pieces in quadrant 3
         b = new Board(true);
@@ -113,6 +113,6 @@ public class GameRulesTest {
         b.setStone(new Vector2(6,7), null);
         b.setStone(new Vector2(7,7), null);
         g = new Game(new GameRules(), b);
-        assertEquals(Stone.COLOR.WHITE, g.getRules().getWinner(g, g.getBoard()));
+        assertEquals(Stone.COLOR.WHITE, g.getRules().getWinner(g, g.getBoard()).get());
     }
 }
