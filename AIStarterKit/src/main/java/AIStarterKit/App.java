@@ -2,6 +2,7 @@ package AIStarterKit;
 
 import Shobu.*;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 
 import java.io.*;
 import java.util.*;
@@ -75,6 +76,8 @@ public class App {
         List<Turn> possibleTurns = new ArrayList<>();
         for (Move m : possiblePassiveMoves) {
             // For each own stone on other color board:
+
+            // TODO does this method even need to be in here?
             List<Stone> validAggressiveStones = getStonesOfColorOnOtherColorBoards(board, whosTurnItIs, m.getOrigin());
             for (Stone s : validAggressiveStones) {
                 // Make a Turn() pairing possible passive move with matching active move origin+heading
@@ -117,22 +120,52 @@ public class App {
         }
     }
 
+    public static JsonReader getGameStatesArrayFromJsonReader(JsonReader jsonReader) {
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if (nextToken != JsonToken.BEGIN_OBJECT) { return null; } // invalid!
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                nextToken = jsonReader.peek();
+                if (nextToken == JsonToken.NAME) {
+                    String name = jsonReader.nextName();
+                    if (name.equals("game_states")) {
+                        jsonReader.beginArray();
+                        return jsonReader;
+                    }
+                } else {
+                    return null;
+                }
+            }
+            jsonReader.endObject();
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
+    }
+
+    public static Game getNextGameFromArrayInJsonReader(JsonReader jsonReader) {
+        try {
+            JsonToken nextToken = jsonReader.peek();
+            if (nextToken != JsonToken.BEGIN_OBJECT) { return null; } // invalid!
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                return Game.fromJsonReader(jsonReader, new GameRules());
+            }
+            jsonReader.endObject();
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
+    }
+
     public static void main(String args[]) {
 
         // Initialize constants
         allPossibleHeadings = getPossibleHeadings();
 
         InputStream in = new BufferedInputStream(System.in);
-        /*if (args.length == 0) {
-            in = System.in;
-        } else {
-            try {
-                in = new FileInputStream(args[0]);
-            } catch (FileNotFoundException e) {
-                System.out.println("Couldn't open file: " + args[0]);
-                return;
-            }
-        }*/
+
         BufferedWriter logWriter = null;
         if (args.length == 1) {
             try {
@@ -140,6 +173,19 @@ public class App {
             } catch (Exception e) {
                 return;
             }
+        }
+
+        // TODO Option set to read game states & output features for each state
+        boolean option = false;
+        if (option) {
+            JsonReader jsonReader = new JsonReader(new InputStreamReader(in));
+            jsonReader = getGameStatesArrayFromJsonReader(jsonReader);
+            Game nextGame = null;
+            for (nextGame = getNextGameFromArrayInJsonReader(jsonReader); nextGame != null; nextGame = getNextGameFromArrayInJsonReader(jsonReader)) {
+                nextGame.getBoard().toString();
+                // TODO calculate features
+            }
+            // TODO Output features to file
         }
 
         boolean canPlay = true;
