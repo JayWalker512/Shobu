@@ -14,11 +14,8 @@ import java.util.stream.Collectors;
 public class HeuristicStrategy implements AIStrategy {
     @Override
     public Optional<Turn> getTurnToPlay(Game shobuGame) {
-        // TODO needs tested & fixed up
-
         // Enumerate legal Turns
-        List<Turn> legalTurns = shobuGame.enumerateLegalTurns(); // enumerateLegalTurns(shobuGame);
-        // log(logWriter,"finished enumerating legal turns.");
+        List<Turn> legalTurns = shobuGame.enumerateLegalTurns();
 
         // Choose a Turn to play
         if (legalTurns.size() > 0) {
@@ -33,25 +30,20 @@ public class HeuristicStrategy implements AIStrategy {
                 Game tempGame = new Game(shobuGame);
                 tempGame.takeTurn(turn);
                 long value = calculateHeuristicBoardValueForColor(tempGame.getBoard(), shobuGame.getWhosTurnItIs());
-                if (value >= maxValue) { chosenTurn = turn; }
+                if (value >= maxValue) {
+                    maxValue = value;
+                    chosenTurn = turn;
+                }
             };
-            // log(logWriter,"finished choosing a turn to play from legal turns.");
 
             return Optional.of(chosenTurn);
-            // Send turn back to Engine as JSON
-            // System.out.println("{\"type\": \"turn\", \"payload\": " + chosenTurn.toJson() + "}");
-            // log(logWriter, "Sent to engine: " + "{\"type\": \"turn\", \"payload\": " + chosenTurn.toJson() + "}");
         }
         return Optional.empty();
     }
 
     private long calculateHeuristicBoardValueForColor(Board board, Stone.COLOR color) {
-        long whiteStones = board.getStones().stream().filter((s) -> {
-            return (s.getColor() == Stone.COLOR.WHITE);
-        }).count();
-        long blackStones = board.getStones().stream().filter((s) -> {
-            return (s.getColor() == Stone.COLOR.BLACK);
-        }).count();
+        long whiteStones = board.getStones().stream().filter((s) -> (s.getColor() == Stone.COLOR.WHITE)).count();
+        long blackStones = board.getStones().stream().filter((s) -> (s.getColor() == Stone.COLOR.BLACK)).count();
 
         long whiteStonesPerQuadrant[] = { 0, 0, 0, 0 };
         long blackStonesPerQuadrant[] = { 0, 0, 0, 0 };
@@ -62,13 +54,13 @@ public class HeuristicStrategy implements AIStrategy {
                 whiteStonesPerQuadrant[board.getQuadrant(board.getStoneLocation(stone.getId()))] += 1;
             }
         }
-        long whiteQuadrantBonus = 0;
-        for (long count : whiteStonesPerQuadrant) {
-            whiteQuadrantBonus += (4 - count) * 2;
-        }
         long blackQuadrantBonus = 0;
-        for (long count : blackStonesPerQuadrant) {
+        for (long count : whiteStonesPerQuadrant) {
             blackQuadrantBonus += (4 - count) * 2;
+        }
+        long whiteQuadrantBonus = 0;
+        for (long count : blackStonesPerQuadrant) {
+            whiteQuadrantBonus += (4 - count) * 2;
         }
 
         long valueForBlack = blackStones - whiteStones + blackQuadrantBonus - whiteQuadrantBonus;

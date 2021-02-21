@@ -9,9 +9,6 @@ import java.util.*;
 
 public class App {
 
-    // Initialized in the main() method.
-    static List<Vector2> allPossibleHeadings = null;
-
     private static void log(BufferedWriter logWriter, String s) {
         try {
             if (logWriter != null) {
@@ -64,19 +61,16 @@ public class App {
 
     public static void main(String args[]) {
 
-        // Initialize constants
-        allPossibleHeadings = Utilities.getPossibleHeadings();
-
         InputStream in = new BufferedInputStream(System.in);
 
         BufferedWriter logWriter = null;
-        if (args.length == 1) {
+        /* if (args.length == 1) {
             try {
                 logWriter = new BufferedWriter(new FileWriter(args[0], false));
             } catch (Exception e) {
                 return;
             }
-        }
+        } */
 
         // TODO Option set to read game states & output features for each state
         boolean option = false;
@@ -92,8 +86,11 @@ public class App {
         }
 
         boolean canPlay = true;
-        // AIStrategy strategy = new HeuristicStrategy();
-        AIStrategy strategy = new RandomStrategy();
+        AIStrategy strategy = new HeuristicStrategy();
+        // TODO need proper argument parsing to handle log file, strategy selection, etc.
+        if (args.length == 1 && args[0].equals("random")) {
+            strategy = new RandomStrategy();
+        }
         while (canPlay) {
             // Read game state JSON
             String nextJson = Utilities.getNextJsonFromInputStream(in);
@@ -113,6 +110,10 @@ public class App {
                 Optional<Turn> chosenTurn = strategy.getTurnToPlay(shobuGame);
                 if (chosenTurn.isPresent()) {
                     // Send turn back to Engine as JSON
+                    /* TODO add a "log" field to each turn? Would make debugging AI choices a little easier.
+                     * But also slow things down a lot & decrease parallelism of this process writing by itself while the
+                     * engine is working. But keeping everything in one file would be nice.
+                     */
                     System.out.println("{\"type\": \"turn\", \"payload\": " + chosenTurn.get().toJson() + "}");
                     log(logWriter, "Sent to engine: " + "{\"type\": \"turn\", \"payload\": " + chosenTurn.get().toJson() + "}");
                 } else {
